@@ -1,0 +1,247 @@
+/* ========================================
+   garden.css — home page garden styles
+   ======================================== */
+
+/* ----- garden scene container ----- */
+.garden-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  position: relative;
+}
+
+/* ----- empty state ----- */
+.garden-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-lg);
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.garden-empty__visual {
+  position: relative;
+  width: 120px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.garden-empty__visual img {
+  width: 100%;
+  height: auto;
+}
+
+.garden-empty__headline {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--color-text);
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.garden-empty__chips {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* small theory link */
+.garden-empty__theory {
+  font-size: 13px;
+  color: var(--color-text-soft);
+  cursor: pointer;
+  transition: color 0.18s;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 2px;
+}
+.garden-empty__theory:hover {
+  color: var(--color-primary-dark);
+}
+
+/* ----- habit tree area ----- */
+.garden-tree-area {
+  position: relative;
+  width: 360px;
+  max-width: 90vw;
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.garden-tree-area .tree-base {
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ----- branch (clickable habit) ----- */
+.branch {
+  position: absolute;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.branch:hover {
+  transform: scale(1.06);
+  filter: brightness(0.92);
+}
+.branch__label {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--color-primary-dark);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+  pointer-events: none;
+}
+
+/* ----- leaf ----- */
+.leaf {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50% 50% 50% 10%;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+.leaf:hover {
+  transform: scale(1.25);
+  z-index: 5;
+}
+.leaf--green {
+  background: var(--color-leaf);
+  box-shadow: 0 0 6px rgba(127, 168, 107, 0.3);
+}
+.leaf--pale {
+  background: var(--color-leaf-pale);
+  box-shadow: 0 0 4px rgba(190, 212, 169, 0.3);
+}
+.leaf--yellow {
+  background: var(--color-yellow-leaf);
+  box-shadow: 0 0 4px rgba(215, 181, 109, 0.3);
+}
+.leaf--bud {
+  width: 12px; height: 12px;
+  background: #c9d8b8;
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(190, 212, 169, 0.25);
+}
+
+/* ----- leaf tooltip ----- */
+.leaf-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 20;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.leaf-tooltip.is-visible {
+  opacity: 1;
+}
+
+/* ----- today card ----- */
+.today-card {
+  max-width: 280px;
+  margin: var(--space-lg) auto 0;
+}
+.today-card__text {
+  font-size: 16px;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+.today-card__actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* ----- return state ("我回来了") ----- */
+.return-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  font-size: 15px;
+  color: var(--color-primary-dark);
+  animation: fadeIn 0.4s ease both;
+}
+.return-banner .btn {
+  flex-shrink: 0;
+}
+
+/* ----- glow card (bottom-right anonymous glow) ----- */
+.glow-card {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  width: 180px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+.glow-card__icon {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto var(--space-sm);
+  opacity: 0.7;
+}
+.glow-card__text {
+  font-size: 13px;
+  color: var(--color-text-soft);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ----- responsive ----- */
+@media (max-width: 640px) {
+  .garden-tree-area {
+    width: 280px;
+    min-height: 380px;
+  }
+  .garden-empty__headline {
+    font-size: 22px;
+  }
+  .branch__label {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+  .leaf {
+    width: 14px;
+    height: 14px;
+  }
+  .leaf--bud {
+    width: 10px; height: 10px;
+  }
+  .glow-card {
+    width: 150px;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    padding: var(--space-sm);
+  }
+}

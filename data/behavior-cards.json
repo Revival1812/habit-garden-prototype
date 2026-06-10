@@ -1,0 +1,82 @@
+{
+  "categories": [
+    {
+      "key": "reduce-friction",
+      "label": "降低阻力",
+      "hint": "让行为更少步骤、更轻量"
+    },
+    {
+      "key": "change-environment",
+      "label": "改变环境",
+      "hint": "调整周围让行为更容易发生"
+    },
+    {
+      "key": "chain-existing",
+      "label": "绑定已有动作",
+      "hint": "把它挂在已经稳定发生的事后面"
+    },
+    {
+      "key": "entry-only",
+      "label": "只做入场动作",
+      "hint": "只完成第一步，不要求更多"
+    }
+  ],
+  "cards": [
+    {
+      "id": "b01",
+      "category": "reduce-friction",
+      "title": "把书放在枕边",
+      "description": "睡前不用找书，伸手就能拿到。",
+      "microType": "quantity-reduction"
+    },
+    {
+      "id": "b02",
+      "category": "reduce-friction",
+      "title": "只读一页",
+      "description": "翻开就算完成。读多读少都算开始。",
+      "microType": "quantity-reduction"
+    },
+    {
+      "id": "b03",
+      "category": "change-environment",
+      "title": "把零食收到柜子里",
+      "description": "看不见就不会随手拿。",
+      "microType": "scene-transition"
+    },
+    {
+      "id": "b04",
+      "category": "change-environment",
+      "title": "提前放好运动鞋",
+      "description": "早上起来第一眼就看到。",
+      "microType": "scene-transition"
+    },
+    {
+      "id": "b05",
+      "category": "chain-existing",
+      "title": "刷牙后喝一杯水",
+      "description": "挂在一个已经不用想就会做的事后面。",
+      "microType": "scene-transition"
+    },
+    {
+      "id": "b06",
+      "category": "chain-existing",
+      "title": "晚饭后坐到书桌前",
+      "description": "不用马上学习，先坐过去。",
+      "microType": "scene-transition"
+    },
+    {
+      "id": "b07",
+      "category": "entry-only",
+      "title": "打开台灯",
+      "description": "只做这一步，打开就算入场。",
+      "microType": "preparation-action"
+    },
+    {
+      "id": "b08",
+      "category": "entry-only",
+      "title": "穿上运动鞋",
+      "description": "只换鞋，不下楼也没关系。",
+      "microType": "preparation-action"
+    }
+  ]
+}
