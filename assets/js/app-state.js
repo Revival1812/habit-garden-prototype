@@ -72,7 +72,8 @@
 
   /* ----- habits CRUD ----- */
   function getHabits() {
-    return safeGetJSON(KEYS.habits) || [];
+    var habits = safeGetJSON(KEYS.habits);
+    return Array.isArray(habits) ? habits : [];
   }
 
   function saveHabits(habits) {
@@ -129,6 +130,9 @@
   function addRecord(habitId, record) {
     var habit = getHabitById(habitId);
     if (!habit) return null;
+    if (!Array.isArray(habit.records)) {
+      habit.records = [];
+    }
 
     // upsert: replace record for same date
     var found = false;

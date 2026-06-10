@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 100" role="img" aria-label="branch week left">
+<defs>
+ <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a86439"/><stop offset=".42" stop-color="#714024"/><stop offset="1" stop-color="#3b2014"/></linearGradient>
+ <filter id="bs" x="-30%" y="-40%" width="180%" height="200%"><feDropShadow dx="2" dy="3" stdDeviation="2.5" flood-color="#201008" flood-opacity=".42"/></filter>
+</defs>
+<g class="branch branch-branch-week-left" filter="url(#bs)">
+ <path class="branch-shadow" d="M140 88 C111 84 95 67 77 54 C57 40 39 30 16 15" fill="none" stroke="#29140d" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+ <path class="branch-path" d="M140 88 C111 84 95 67 77 54 C57 40 39 30 16 15" fill="none" stroke="url(#wood)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M140 88 C111 84 95 67 77 54 C57 40 39 30 16 15" fill="none" stroke="#e2a06a" stroke-width="2.0" stroke-linecap="round" stroke-dasharray="4 12" opacity=".34"/>
+</g>
+</svg>

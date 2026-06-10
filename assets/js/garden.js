@@ -73,6 +73,18 @@
     }
   }
 
+  function bindLeafTooltip(leaf, record, habitName) {
+    leaf.addEventListener('mouseenter', function (e) {
+      showTooltip(e, record, habitName);
+    });
+    leaf.addEventListener('mousemove', function (e) {
+      moveTooltip(e);
+    });
+    leaf.addEventListener('mouseleave', function () {
+      hideTooltip();
+    });
+  }
+
   function positionTooltip(evt) {
     if (!tooltipEl) return;
     var x = evt.clientX + 14;
@@ -220,9 +232,10 @@
       // branch label
       var label = document.createElement('span');
       label.className = 'branch__label';
-      label.textContent = habit.wish.length > 8
-        ? habit.wish.slice(0, 8) + '…'
-        : habit.wish;
+      var habitLabel = habit.wish || '容易发生的行为';
+      label.textContent = habitLabel.length > 8
+        ? habitLabel.slice(0, 8) + '…'
+        : habitLabel;
 
       if (anchor.labelSide === 'left') {
         label.style.position = 'absolute';
@@ -267,16 +280,7 @@
         leaf.style.marginLeft = offsetX + 'px';
         leaf.style.marginTop = offsetY + 'px';
 
-        // tooltip events
-        leaf.addEventListener('mouseenter', function (e) {
-          showTooltip(e, rec, habit.wish);
-        });
-        leaf.addEventListener('mousemove', function (e) {
-          moveTooltip(e);
-        });
-        leaf.addEventListener('mouseleave', function () {
-          hideTooltip();
-        });
+        bindLeafTooltip(leaf, rec, habitLabel);
 
         branch.appendChild(leaf);
       }
@@ -359,9 +363,6 @@
   function init() {
     var root = document.getElementById('garden-root');
     if (!root) return;
-
-    // ensure data
-    AppState.seedDemoDataIfEmpty();
 
     // build layout
     var wrap = document.createElement('div');

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 390" role="img" aria-label="Bark texture overlay">
+<defs><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".018 .12" numOctaves="3" seed="8" result="n"/><feColorMatrix in="n" type="saturate" values="0" result="g"/><feComponentTransfer><feFuncA type="table" tableValues="0 .42"/></feComponentTransfer></filter><linearGradient id="bark" x1="0" x2="1"><stop stop-color="#2f170e"/><stop offset=".5" stop-color="#8a4a2a"/><stop offset="1" stop-color="#32170f"/></linearGradient></defs>
+<rect width="320" height="390" fill="url(#bark)" opacity=".42" filter="url(#rough)"/>
+<g fill="none" stroke-linecap="round">
+ <path d="M145 44 C132 88 154 124 140 166 S151 240 137 297" stroke="#2b140d" stroke-width="5" opacity=".45"/>
+ <path d="M171 50 C185 91 163 126 178 170 S166 242 181 303" stroke="#d18a59" stroke-width="3" opacity=".28"/>
+ <path d="M153 106 C143 119 143 134 151 147" stroke="#1f100b" stroke-width="3" opacity=".45"/>
+ <path d="M167 198 C179 211 179 228 170 241" stroke="#1f100b" stroke-width="3" opacity=".4"/>
+</g>
+</svg>

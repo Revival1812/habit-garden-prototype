@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>行为设计曲线</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/create.css" />
+  <script defer src="assets/js/app-state.js"></script>
+  <script defer src="assets/js/create-flow.js"></script>
+</head>
+<body>
+  <div class="page-wrap">
+    <nav class="top-nav" aria-label="主导航">
+      <a href="index.html">花园</a>
+      <a href="create.html" class="active">设计</a>
+      <a href="review.html">复盘</a>
+      <a href="explore.html">探索</a>
+    </nav>
+
+    <main class="main-content create-page fade-in">
+      <div class="create-intro">
+        <p class="create-kicker">行为设计曲线</p>
+        <h1 class="page-title">先把它种成今天能开始的一小步。</h1>
+      </div>
+
+      <section class="create-layout" aria-label="行为设计">
+        <aside class="curve-panel card" aria-labelledby="curve-title">
+          <div class="curve-panel__header">
+            <h2 id="curve-title" class="section-title">曲线</h2>
+            <p class="helper-text">一步一步显现</p>
+          </div>
+          <div id="curve-board" class="curve-board"></div>
+        </aside>
+
+        <section class="workspace-panel" aria-live="polite">
+          <div id="step-card" class="card step-card"></div>
+        </section>
+
+        <aside class="preview-panel card" aria-labelledby="preview-title">
+          <div class="preview-panel__header">
+            <h2 id="preview-title" class="section-title">方案预览</h2>
+            <span id="preview-badge" class="preview-badge">先从愿望开始</span>
+          </div>
+          <div id="plan-preview" class="plan-preview"></div>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>自由探索</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    .explore-page {
+      max-width: 1120px;
+      padding-top: 30px;
+      padding-bottom: 48px;
+    }
+
+    .explore-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .explore-kicker {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(220, 232, 213, 0.78);
+      color: var(--color-primary-dark);
+      font-size: 13px;
+    }
+
+    .explore-title {
+      max-width: 720px;
+      margin: 0;
+      color: var(--color-text);
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+
+    .explore-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .explore-library {
+      display: grid;
+      gap: 16px;
+    }
+
+    .inspiration-group,
+    .glow-wall {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background:
+        radial-gradient(circle at top left, rgba(244, 223, 155, 0.16), transparent 38%),
+        linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 250, 241, 0.96));
+      box-shadow: var(--shadow-card);
+      padding: 20px;
+    }
+
+    .inspiration-group__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .inspiration-group__head h2,
+    .glow-wall h2 {
+      margin: 0;
+      color: var(--color-text);
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .inspiration-group__head p {
+      margin: 0;
+      color: var(--color-text-soft);
+      font-size: 14px;
+    }
+
+    .inspiration-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .inspiration-card {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+      min-height: 132px;
+      padding: 16px;
+      border: 1px solid rgba(63, 95, 70, 0.11);
+      border-radius: var(--radius-md);
+      background: rgba(255, 253, 247, 0.82);
+      color: var(--color-text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .inspiration-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(111, 143, 114, 0.5);
+      background: rgba(255, 253, 247, 1);
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .inspiration-card__title {
+      color: var(--color-text);
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .inspiration-card__copy {
+      color: var(--color-text-soft);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .inspiration-card__action {
+      align-self: end;
+      width: fit-content;
+      color: var(--color-primary-dark);
+      font-size: 13px;
+    }
+
+    .glow-wall {
+      position: sticky;
+      top: 18px;
+      overflow: hidden;
+    }
+
+    .glow-wall::before {
+      content: "";
+      display: block;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(244, 223, 155, 0.95) 0 28%, rgba(244, 223, 155, 0.24) 29% 58%, transparent 59%);
+      animation: glowPulse 2.8s ease-in-out infinite;
+    }
+
+    .glow-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .glow-message {
+      margin: 0;
+      padding: 13px 14px;
+      border: 1px solid rgba(169, 130, 90, 0.12);
+      border-radius: var(--radius-md);
+      background: rgba(244, 223, 155, 0.16);
+      color: var(--color-text-soft);
+      font-size: 14px;
+      line-height: 1.45;
+      animation: fadeIn 0.36s ease both;
+    }
+
+    @media (max-width: 900px) {
+      .explore-layout,
+      .inspiration-list {
+        grid-template-columns: 1fr;
+      }
+
+      .glow-wall {
+        position: static;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .explore-page {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .explore-head,
+      .inspiration-group__head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .explore-head .btn {
+        width: 100%;
+      }
+
+      .explore-title {
+        font-size: 30px;
+      }
+    }
+  </style>
+  <script defer src="assets/js/explore.js"></script>
+</head>
+<body>
+  <div class="page-wrap">
+    <nav class="top-nav" aria-label="主导航">
+      <a href="index.html">花园</a>
+      <a href="create.html">设计</a>
+      <a href="review.html">复盘</a>
+      <a href="explore.html" class="active">探索</a>
+    </nav>
+
+    <main id="explore-root" class="main-content explore-page fade-in"></main>
+  </div>
+</body>
+</html>

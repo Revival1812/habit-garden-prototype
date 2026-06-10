@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Glow ring">
+<defs><radialGradient id="g"><stop stop-color="#e9ffb0" stop-opacity=".65"/><stop offset=".38" stop-color="#9cff68" stop-opacity=".25"/><stop offset="1" stop-color="#86ff6e" stop-opacity="0"/></radialGradient><filter id="b"><feGaussianBlur stdDeviation="2.5"/></filter></defs><circle cx="60" cy="60" r="52" fill="url(#g)" filter="url(#b)"/><circle cx="60" cy="60" r="34" fill="none" stroke="#eaffb9" stroke-width="3" opacity=".72"/><circle cx="60" cy="60" r="44" fill="none" stroke="#a8ff72" stroke-width="2" opacity=".38"/>
+</svg>
