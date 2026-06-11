@@ -13,9 +13,41 @@ Preferred feeling:
 慢一点。
 可以回来。
 可以调整。
+今天发生什么，就先留下什么。
 ```
 
-## 2. Words to Avoid
+---
+
+## 2. Deprecated Language
+
+Do not use tree-growth language for the new home and detail system:
+
+```text
+习惯树
+树枝
+树干
+年轮
+长出叶子
+浇水
+养成植物
+枝干生长
+放到树上
+```
+
+Use river-stage language instead:
+
+```text
+河流
+河面
+留下痕迹
+放到河流里
+今天的物件
+这一天在这里
+```
+
+---
+
+## 3. Words to Avoid
 
 Avoid these words in primary UI:
 
@@ -52,7 +84,9 @@ Avoid guilt-inducing copy:
 你落后别人了
 ```
 
-## 3. Preferred Words
+---
+
+## 4. Preferred Words
 
 Use:
 
@@ -68,68 +102,126 @@ Use:
 自然发生
 卡在哪里
 这也会留下来
+放到河流里
+今天先这样
 ```
 
-## 4. Page-Level Copy
+---
 
-### 4.1 Home Empty State
+## 5. Page-Level Copy
 
-Headline:
+### 5.1 Home - No Habit Selected
+
+Core motto:
 
 ```text
-先种下一个容易发生的行为。
+把今天发生的，轻轻放在河面上。
 ```
 
-State chips:
+Secondary copy:
 
 ```text
-我很有动力
-我有点累，但想开始
-我只是看看
+不用追赶。先看见一个容易发生的小动作。
 ```
 
-Primary button:
+Primary action:
 
 ```text
-生成一个微习惯方案
+设计一个小习惯
 ```
 
-Small theory entry:
+### 5.2 Home - Habit Selected
+
+Month label:
 
 ```text
-为什么不是打卡？
+这个月的痕迹
 ```
 
-Short explanation:
+Empty month:
 
 ```text
-行为发生，不只靠坚持。
-它需要想做、做得动、想得起来。
-这里会帮你把行为设计得更容易发生。
+这个月还很安静。
 ```
 
-### 4.2 Home Existing State
-
-Today card:
+Placeholder ripple tooltip:
 
 ```text
-今天只做第一步也可以。
+还没有记录
 ```
 
-Return state:
+### 5.3 Today Record
+
+Panel title:
 
 ```text
-欢迎回来。
-今天可以从一个很小的动作重新开始。
+今日记录
 ```
 
-Button:
+Panel helper:
 
 ```text
-我回来了
+选择今天最接近的状态就好。
 ```
 
-### 4.3 Creation Page
+Status options:
+
+```text
+完成
+入场
+降级
+未发生
+```
+
+Optional note label:
+
+```text
+想留下一点想法吗？
+```
+
+Optional note skip:
+
+```text
+先不写
+```
+
+Save:
+
+```text
+留下今天
+```
+
+### 5.4 Missed Reason
+
+Question:
+
+```text
+今天卡在哪里？
+```
+
+Options:
+
+```text
+忘记了
+太累了
+时间不合适
+动作太大
+环境不支持
+突发事件
+情绪低落
+不想记录原因
+```
+
+Suggestion examples:
+
+```text
+明天可以只做第一步。
+可以把动作调轻一点。
+这个提示点也许需要换一换。
+今天也会留下来。
+```
+
+### 5.5 Creation Page
 
 Step 1:
 
@@ -176,39 +268,48 @@ Final:
 Save button:
 
 ```text
-放到我的树上
+放到河流里
 ```
 
-### 4.4 Detail Page
+### 5.6 Detail Page
 
-Today action:
+Title pattern:
 
 ```text
-今天从这里开始。
+这周的痕迹
 ```
 
-Record options:
+Current plan:
 
 ```text
-完成真实行动
-完成入场动作
-今天先降级
-今天没有发生
+当前方案
 ```
 
-Missed reason:
+Heatmap:
 
 ```text
-今天卡在哪里？
+发生节奏
 ```
 
-Suggestion:
+Single-day detail:
 
 ```text
-明天可以把它调轻一点。
+这一天
 ```
 
-### 4.5 Review Page
+Panel collapse:
+
+```text
+收起
+```
+
+Panel expand:
+
+```text
+展开
+```
+
+### 5.7 Review Page
 
 Title:
 
@@ -231,7 +332,7 @@ Ability:
 Prompt:
 
 ```text
-晚饭后的提示最稳定。
+晚饭后的提示比较稳定。
 ```
 
 Suggestion:
@@ -240,7 +341,7 @@ Suggestion:
 下一步可以先保留这个提示点。
 ```
 
-### 4.6 Explore Page
+### 5.8 Explore Page
 
 Title:
 
@@ -248,7 +349,7 @@ Title:
 找一个更容易开始的方式。
 ```
 
-Glow wall:
+Gentle trace wall:
 
 ```text
 有人今天也只是完成了第一步。
@@ -256,7 +357,9 @@ Glow wall:
 有人中断后又回来了。
 ```
 
-## 5. Microcopy Rules
+---
+
+## 6. Microcopy Rules
 
 Button copy should be direct:
 
@@ -264,17 +367,18 @@ Good:
 
 ```text
 继续
-放到树上
+放到河流里
 调轻一点
 换提示点
 回到花园
+留下今天
 ```
 
 Bad:
 
 ```text
 点击此处提交你的完整习惯设计方案
-确认并进入下一阶段
+确认并进入下一个阶段
 ```
 
 Tooltip copy should be short:
@@ -282,16 +386,18 @@ Tooltip copy should be short:
 Good:
 
 ```text
-6 月 10 日：完成入场动作
+6 月 10 日：入场
 ```
 
 Bad:
 
 ```text
-你在 6 月 10 日完成了该习惯的初级阶段，因此系统为你记录了一片浅绿色叶子。
+你在 6 月 10 日完成了该习惯的初级阶段，因此系统为你记录了一片深绿色小叶片。
 ```
 
-## 6. Tone by User Mode
+---
+
+## 7. Tone by User Mode
 
 ### Gentle Companion Mode
 
@@ -318,17 +424,16 @@ Use:
 Use:
 
 ```text
-这条枝桠在晚饭后更容易发芽。
-今天留下了一点微光。
+今天的痕迹停在这里。
+河面上多了一点回应。
 ```
 
-## 7. Final Rule
+---
+
+## 8. Final Rule
 
 If a sentence is not necessary for action, remove it.
 
 If a sentence creates pressure, rewrite it.
 
 If a sentence explains theory, convert it into an action.
-
----
-

@@ -3,11 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>习惯枝桠</title>
+  <title>习惯详情</title>
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/river-stage.css" />
   <link rel="stylesheet" href="assets/css/detail.css" />
   <script defer src="assets/js/app-state.js"></script>
+  <script defer src="assets/js/river-stage-model.js"></script>
+  <script defer src="assets/js/river-stage-renderer.js"></script>
+  <script defer src="assets/js/river-stage-interactions.js"></script>
+  <script defer src="assets/js/today-record-popover.js"></script>
+  <script defer src="assets/js/habit-heatmap.js"></script>
   <script defer src="assets/js/detail.js"></script>
 </head>
 <body>
@@ -17,9 +23,14 @@
       <a href="create.html">设计</a>
       <a href="review.html">复盘</a>
       <a href="explore.html">探索</a>
+      <a href="#" data-nav="today-record">今日记录</a>
     </nav>
 
-    <main id="detail-root" class="main-content detail-page fade-in"></main>
+    <main id="habitDetailApp" class="detail-page river-detail-ready-page">
+      <section id="riverDetailMount" class="river-detail-mount">
+        <!-- River detail system will be mounted here later -->
+      </section>
+    </main>
   </div>
 </body>
 </html>

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 130" role="img" aria-label="Leaf cluster">
-<defs><filter id="s" x="-30%" y="-30%" width="170%" height="170%"><feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#173617" flood-opacity=".36"/></filter><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b8ef72"/><stop offset=".6" stop-color="#3f9c48"/><stop offset="1" stop-color="#1f6332"/></linearGradient></defs><g filter="url(#s)">
-<path d="M68 87 C65 50 85 26 119 20 C120 55 102 83 72 94 Z" fill="url(#g1)"/><path d="M73 90 C90 70 101 47 114 27" stroke="#dff4af" stroke-opacity=".45" stroke-width="2"/>
-<path d="M67 93 C41 74 35 45 52 18 C79 35 88 64 73 92 Z" fill="url(#g1)"/><path d="M68 88 C65 65 59 44 53 25" stroke="#dff4af" stroke-opacity=".45" stroke-width="2"/>
-<path d="M74 96 C93 76 120 75 143 91 C125 115 99 122 76 106 Z" fill="url(#g1)"/><path d="M80 101 C99 97 117 96 136 94" stroke="#dff4af" stroke-opacity=".45" stroke-width="2"/>
-<path d="M67 98 C48 80 22 81 6 98 C24 118 46 122 68 108 Z" fill="url(#g1)"/><circle cx="72" cy="100" r="8" fill="#315f2d"/></g>
-</svg>

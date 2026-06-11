@@ -1,3 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 85" role="img" aria-label="Tooltip anchor">
-<defs><filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".28"/></filter><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffdf3"/><stop offset="1" stop-color="#dfd6bd"/></linearGradient></defs><g filter="url(#s)"><path d="M12 10 H68 Q76 10 76 18 V54 Q76 62 68 62 H44 L32 78 L30 62 H12 Q4 62 4 54 V18 Q4 10 12 10 Z" fill="url(#g)" stroke="#7b684e" stroke-width="2"/><circle cx="40" cy="36" r="8" fill="#6ca85b"/><circle cx="37" cy="33" r="2" fill="#e7f5cf"/></g>
-</svg>

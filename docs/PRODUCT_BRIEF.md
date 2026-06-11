@@ -4,17 +4,21 @@
 
 Habit Garden
 
-中文可称为：
+Chinese name:
 
 ```text
 习惯花园
 ```
 
+The name can remain Habit Garden, but the home visual system is now the River Stage Habit System.
+
+---
+
 ## 2. Product Positioning
 
 Habit Garden is a static web prototype for a low-pressure habit design assistant.
 
-It is not a traditional check-in tool. It does not ask users to rely on willpower, streaks, or public supervision. Instead, it helps users design behaviors that are easier to happen.
+It is not a traditional check-in tool. It does not ask users to rely on willpower, streaks, or public supervision. Instead, it helps users design behaviors that are easier to happen, then records traces in a calm visual stage.
 
 The core idea is:
 
@@ -22,7 +26,60 @@ The core idea is:
 不是逼自己坚持，而是把行为设计得更容易发生。
 ```
 
-## 3. Target Users
+The product should feel like a quiet place where a user can place a habit, observe what happened, and adjust the design without shame.
+
+---
+
+## 3. Current Metaphor
+
+The current metaphor is:
+
+```text
+River Stage Habit System
+```
+
+The home page uses a fixed river background as a stage. The river is not a data visualization by itself. Habit data is shown through objects placed on fixed points over the river.
+
+Mapping:
+
+| Product element | River stage metaphor |
+| --- | --- |
+| Habit list | Left floating habit shelf |
+| Selected habit | Current river stage focus |
+| Current month | Set of fixed river points |
+| One day | One river object |
+| Completed real action | Lotus |
+| Entry action | Dark green small leaf |
+| Downgraded action | Light green small leaf |
+| Did not happen | Small stone |
+| Not recorded | Faint placeholder ripple |
+| Today record | Fixed-height floating panel |
+| Detail view | Same river, one habit, one week |
+| Plan review | Right collapsible floating panel |
+
+This metaphor preserves traces without implying that the user must grow a plant every day.
+
+---
+
+## 4. Deprecated Metaphor
+
+The following previous directions are no longer product directions:
+
+* habit tree as the home visual
+* branch growth as progress
+* trunk / branch / tree renderer
+* tree rings as long-term history
+* `tree-layout-registry` calibration
+* dynamic branch stitching
+* realistic tree assets
+* watering plants as the daily action
+* Three.js plant raising
+
+Future implementation should not rebuild these systems under new names.
+
+---
+
+## 5. Target Users
 
 The main target users are young students and early adults who want to build better habits but often experience:
 
@@ -36,7 +93,7 @@ The main target users are young students and early adults who want to build bett
 
 The product should support three broad user tendencies:
 
-### 3.1 Gentle Companion Type
+### 5.1 Gentle Companion Type
 
 Needs:
 
@@ -46,7 +103,7 @@ Needs:
 * soft visual feedback
 * easy return
 
-### 3.2 Rational Closed-loop Type
+### 5.2 Rational Closed-loop Type
 
 Needs:
 
@@ -56,7 +113,7 @@ Needs:
 * action records
 * plan health feedback
 
-### 3.3 Experience Exploration Type
+### 5.3 Experience Exploration Type
 
 Needs:
 
@@ -68,11 +125,13 @@ Needs:
 
 The first version should not force users to select a personality type. The interface should infer or adapt gradually through light choices.
 
-## 4. Core Problem
+---
+
+## 6. Core Problem
 
 Many habit tools assume that users already know what to do and only need reminders or tracking.
 
-However, many users fail not because they are lazy, but because:
+However, many users struggle because:
 
 * the behavior is too large
 * the prompt is not natural
@@ -83,7 +142,9 @@ However, many users fail not because they are lazy, but because:
 
 Habit Garden treats habit formation as a design problem rather than a discipline problem.
 
-## 5. Core Model
+---
+
+## 7. Core Model
 
 The product is based on the Fogg Behavior Model:
 
@@ -101,67 +162,68 @@ In the interface, this should be translated into:
 
 The user should not need to learn theory first. The model should appear through interaction.
 
-## 6. Core User Journey
+---
+
+## 8. Core User Journey
 
 The main journey is:
 
 ```text
 进入花园首页
-→ 种下一个习惯
-→ 进入行为设计曲线
-→ 澄清愿望
-→ 识别真实动机
-→ 探索候选行为
-→ 通过焦点地图选择黄金行为
-→ 生成微习惯
-→ 绑定自然提示
-→ 生成 3 天试运行方案
-→ 放到习惯树上
-→ 每天留下叶子痕迹
-→ 中断时生成黄叶
-→ 回来后继续调整和生长
+-> 看到河流舞台和左侧习惯列表
+-> 选择一个习惯，查看当月在河流上的痕迹
+-> 从今日记录浮窗选择当天状态
+-> 可选择填写理由/想法，也可以忽略
+-> 记录写入该习惯当天 record
+-> 河流舞台更新当天物件
+-> 进入详情页查看该习惯某月某周
+-> 在右侧浮窗查看当前方案、热力图、单日详情
+-> 根据观察轻轻调整计划
 ```
 
-## 7. Core Metaphor
+Creation journey remains:
 
-The product uses a garden metaphor.
+```text
+设计
+-> 愿望
+-> 为什么是现在
+-> 候选行为
+-> 焦点地图
+-> 微习惯
+-> 自然提示
+-> 放到河流里
+```
 
-Mapping:
+---
 
-| Product Element         | Visual Metaphor  |
-| ----------------------- | ---------------- |
-| New habit               | Seed             |
-| Habit plan              | Branch           |
-| Daily record            | Leaf             |
-| Entry action completed  | Pale leaf        |
-| Real action completed   | Green leaf       |
-| Missed day              | Yellow leaf      |
-| Long-term growth        | Tree ring        |
-| Anonymous companionship | Glow             |
-| Creation process        | Growing curve    |
-| Adjustment              | New small branch |
+## 9. MVP Scope
 
-The metaphor should help users feel that history is preserved even when progress is interrupted.
+The first river-stage version must include:
 
-## 8. MVP Scope
+1. River stage home page.
+2. Fixed river background image.
+3. Left floating habit list.
+4. Pointer-directed auto-scroll habit rail with no obvious heavy scrollbar.
+5. Plus/add control below the habit rail, linking to `create.html`.
+6. No-selected-habit motto panel.
+7. Selected-habit monthly record overlay.
+8. One river object per day.
+9. Status-to-object mapping.
+10. Top navigation with `花园 / 设计 / 复盘 / 探索 / 今日记录`.
+11. Today record fixed-height floating panel on home and detail.
+12. Four today status choices.
+13. Optional note/reason after status selection.
+14. Detail page with same river background.
+15. Detail page week overlay for one habit, with at most 7 actual days.
+16. Detail page right collapsible panel.
+17. Current-plan edit action returning to `create.html`.
+18. Soft contribution-style heatmap.
+19. Behavior design curve creation flow.
+20. Static localStorage persistence.
 
-The first version must include:
+---
 
-1. Habit garden home page.
-2. Empty state with seed or soil.
-3. Behavior design curve page.
-4. Six-step creation flow.
-5. Focus map interaction.
-6. Micro-habit generation.
-7. Natural prompt generation.
-8. Habit tree display.
-9. Daily record through leaves.
-10. Missed-day yellow leaf.
-11. No-shame return button.
-12. Lightweight review page.
-13. Optional exploration page.
-
-## 9. Out of Scope for Static Prototype
+## 10. Out of Scope for Static Prototype
 
 Do not implement:
 
@@ -175,17 +237,22 @@ Do not implement:
 * real leaderboard
 * complex chart system
 * server-side persistence
+* React / Vue / Next / npm workflow
+* Three.js visual stage
+* dynamic tree renderer
 
 Use static simulation and localStorage only.
 
-## 10. Success Criteria
+---
+
+## 11. Success Criteria
 
 The prototype succeeds if a user can understand and complete the core journey without reading long instructions.
 
 A good experience should feel like:
 
 ```text
-我只是放下一个愿望，系统就一步步帮我把它变成一个今天能开始的小动作。
+我只是放下一个愿望，系统一步步帮我把它变成今天能开始的小动作。记录时，它只是把今天发生的事留在河面上。
 ```
 
 The prototype fails if it feels like:
@@ -194,7 +261,6 @@ The prototype fails if it feels like:
 一个普通的打卡表格。
 一个任务管理后台。
 一个需要填写很多内容的问卷。
-一个失败后让人有压力的监督工具。
+一个中断后让人有压力的监督工具。
+一个树木养成小游戏。
 ```
-
----

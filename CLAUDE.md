@@ -1,10 +1,18 @@
 # Habit Garden Static Prototype
 
-## 1. Project Goal
+## 1. Current Product Direction
 
-This project is a static web prototype for a habit design product based on the Fogg Behavior Model.
+This project is a static web prototype for a low-pressure habit design product based on the Fogg Behavior Model.
 
-The product is not a traditional habit tracker. It should not pressure users to “keep streaks” or “force discipline”. Its core purpose is to help users design behaviors that are easier to happen.
+The current visual direction is:
+
+```text
+Habit Garden + Behavior Design Curve + River Stage Habit System
+```
+
+The project no longer uses a habit tree as the home visual. The home page should become a fixed river-background stage. Habits and daily records are shown as soft overlays on top of the river, not as branches, trunks, tree rings, or generated plant growth.
+
+The product is not a traditional check-in app. It should not pressure users to keep streaks, force discipline, or recover from "failure". Its core purpose is to help users design behaviors that are easier to happen, then leave visible traces in a gentle environment.
 
 The prototype should guide users through a low-pressure behavior design process:
 
@@ -14,24 +22,34 @@ The prototype should guide users through a low-pressure behavior design process:
 4. Select a golden behavior using a focus map.
 5. Convert the golden behavior into a micro-habit.
 6. Bind the micro-habit to a natural prompt.
-7. Place the habit into a visual habit garden.
+7. Place the habit into the river stage.
 8. Record behavior traces without shame.
 9. Adjust the plan when interruption happens.
 10. Help users return without judgment.
 
-The main product metaphor is:
+---
 
-```text
-Habit Garden + Behavior Design Curve + Habit Tree
-```
+## 2. Deprecated Directions
 
-The user should feel that they are planting, growing, adjusting, and returning to habits, not completing rigid tasks.
+The following directions are explicitly deprecated and must not be reintroduced as the home visual system:
+
+* old habit tree / tree growth system
+* branch / trunk / tree renderer as the home page main visual
+* `tree-layout-registry` calibration workflow
+* dynamic branch stitching or branch growth rendering
+* tree rings as progress history
+* multiple river systems competing for habit data
+* Three.js plant-growing or watering simulation
+* realistic trunk / realistic branch composition
+* watering plants as the central habit interaction
+
+Existing files may still contain names such as `garden` for historical reasons, but new implementation work should follow the river stage specs in `docs/RIVER_STAGE_SYSTEM.md`.
 
 ---
 
-## 2. Core Design Philosophy
+## 3. Core Design Philosophy
 
-### 2.1 Product Positioning
+### 3.1 Product Positioning
 
 The product should communicate:
 
@@ -56,7 +74,7 @@ I can do it.
 I can remember to do it.
 ```
 
-### 2.2 What the Product Should Emphasize
+### 3.2 What the Product Should Emphasize
 
 The prototype should emphasize:
 
@@ -69,8 +87,9 @@ The prototype should emphasize:
 * no-shame return
 * quiet progress
 * behavior adjustment
+* one stable visual stage instead of simulated growth pressure
 
-### 2.3 What the Product Should Avoid
+### 3.3 What the Product Should Avoid
 
 The prototype must avoid:
 
@@ -84,10 +103,11 @@ The prototype must avoid:
 * dashboard-like KPI panels
 * long educational explanations
 * traditional task management style
+* tree growth language such as branch, trunk, tree ring, watering, or plant upgrade
 
 ---
 
-## 3. Technical Constraints
+## 4. Technical Constraints
 
 This is a static prototype.
 
@@ -113,218 +133,165 @@ Recommended state strategy:
 
 * Store created habits in `localStorage`.
 * Store current selected habit ID in `localStorage`.
-* Store daily records as simple arrays.
+* Store daily records inside each habit object.
+* Store the selected home habit separately from the current detail habit if needed.
 * Provide fallback demo data when no local habit exists.
 
 ---
 
-## 4. Required File Structure
+## 5. Required File Structure
+
+The current prototype keeps the existing static file structure. New river documentation is added under `docs/`.
 
 ```text
 habit-garden-prototype/
-├─ index.html
-├─ create.html
-├─ detail.html
-├─ review.html
-├─ explore.html
-├─ assets/
-│  ├─ css/
-│  │  ├─ base.css
-│  │  ├─ garden.css
-│  │  ├─ create.css
-│  │  ├─ detail.css
-│  │  └─ animations.css
-│  ├─ js/
-│  │  ├─ app-state.js
-│  │  ├─ garden.js
-│  │  ├─ create-flow.js
-│  │  ├─ detail.js
-│  │  ├─ review.js
-│  │  └─ micro-interactions.js
-│  └─ svg/
-│     ├─ tree.svg
-│     ├─ seed.svg
-│     ├─ leaf.svg
-│     └─ glow.svg
-├─ data/
-│  ├─ templates.json
-│  ├─ behavior-cards.json
-│  └─ demo-habits.json
-├─ docs/
-│  ├─ PRODUCT_BRIEF.md
-│  ├─ UI_SPEC.md
-│  ├─ INTERACTION_SPEC.md
-│  ├─ COPY_RULES.md
-│  └─ ACCEPTANCE_CHECKLIST.md
-└─ .claude/
-   ├─ skills/
-   │  ├─ fogg-habit-ux-skill/
-   │  │  └─ SKILL.md
-   │  ├─ visual-garden-ui-skill/
-   │  │  └─ SKILL.md
-   │  ├─ static-prototype-code-skill/
-   │  │  └─ SKILL.md
-   │  ├─ micro-interaction-motion-skill/
-   │  │  └─ SKILL.md
-   │  ├─ low-text-copy-skill/
-   │  │  └─ SKILL.md
-   │  └─ qa-polish-review-skill/
-   │     └─ SKILL.md
-   └─ settings.json
+├── index.html
+├── create.html
+├── detail.html
+├── review.html
+├── explore.html
+├── assets/
+│   ├── css/
+│   ├── js/
+│   └── svg/
+├── data/
+└── docs/
+    ├── PRODUCT_BRIEF.md
+    ├── UI_SPEC.md
+    ├── INTERACTION_SPEC.md
+    ├── COPY_RULES.md
+    ├── ACCEPTANCE_CHECKLIST.md
+    ├── RIVER_STAGE_SYSTEM.md
+    ├── RIVER_HOME_SPEC.md
+    ├── RIVER_DETAIL_SPEC.md
+    └── RIVER_COMPONENT_SPEC.md
 ```
+
+Do not add framework folders, package manifests, build tooling, or server code.
 
 ---
 
-## 5. Required Pages
+## 6. Required Pages
 
-### 5.1 `index.html` — Habit Garden Home
+### 6.1 `index.html` - River Stage Home
 
 The home page is the core visual hub.
 
-It should support two states:
+It uses one fixed river background image as the stage. The background only provides atmosphere and spatial rhythm. It must not encode real habit data.
 
-#### Empty State
+Required structure:
 
-When the user has no habit:
+* top navigation
+* left floating habit list
+* central river stage
+* initial motto floating panel when no habit is selected
+* monthly record overlay when a habit is selected
+* fixed-height today record popover opened from the top navigation
 
-* Show a seed, soil, or small empty tree.
-* Show one short sentence:
+When no habit is selected:
 
-```text
-先种下一个容易发生的行为。
-```
+* show the river background
+* show the habit list on the left
+* show one core motto panel floating over the stage
+* do not show monthly river objects
 
-* Show three light state choices:
+Left habit list rules:
 
-```text
-我很有动力
-我有点累，但想开始
-我只是看看
-```
+* Use a light vertical rail style.
+* Habit text must not intersect the rail line.
+* If habits overflow, scroll by pointer position inside the list area.
+* Avoid an obvious heavy scrollbar for the habit rail.
+* Place a plus/add control below the rail.
+* The plus/add control navigates to `create.html`.
 
-* Show one primary button:
+When a habit is selected:
 
-```text
-生成一个微习惯方案
-```
+* hide the motto panel
+* keep the same river background
+* show that habit's current month records on fixed river points
+* each day maps to one river object
 
-Clicking the button should navigate to `create.html`.
+Status visual mapping:
 
-#### Existing Habit State
+| Record status | River object |
+| --- | --- |
+| `real` | lotus |
+| `entry` | dark green small leaf |
+| `downgrade` | light green small leaf |
+| `missed` | small stone |
+| no record | faint placeholder ripple |
 
-When the user has habits:
+The home page must not look like a dashboard.
 
-* Show a habit tree.
-* Each branch represents one habit.
-* Leaves represent daily traces.
-* Green leaf means real action completed.
-* Pale leaf means entry action completed.
-* Yellow leaf means not completed, but history is still preserved.
-* Clicking a branch navigates to `detail.html`.
-* Hovering a leaf shows date and record note.
-* The page should include a low-pressure “我回来了” entry when the user returns after interruption.
+### 6.2 `create.html` - Behavior Design Curve
 
-The home page must not look like an admin dashboard.
-
----
-
-### 5.2 `create.html` — Behavior Design Curve
-
-The creation page should use a growing curve instead of a traditional form.
+The creation page keeps the behavior design curve.
 
 The curve has six nodes:
 
-1. 愿望
-2. 为什么现在
-3. 候选行为
-4. 焦点地图
-5. 微习惯
-6. 自然提示
+1. Wish
+2. Why now
+3. Candidate behaviors
+4. Focus map
+5. Micro-habit
+6. Natural prompt
 
-The curve should reveal gradually as the user completes steps.
+At the end, the page should generate a three-day trial plan and provide a button to place the habit into the river stage.
 
-Each step should show only one main question. The user should mainly interact through cards, small buttons, or drag actions. Long text input should be minimized.
+### 6.3 `detail.html` - River Habit Detail
 
-At the end, the page should generate a three-day trial plan and provide a button:
+The detail page uses the same river background as the home page, but focuses on one habit and one week within a selected month.
 
-```text
-放到我的树上
-```
+Required structure:
 
-Clicking the button should save the habit to `localStorage` and return to `index.html`.
+* top navigation
+* river detail stage
+* current habit identity
+* week record overlay on fixed river points
+* collapsible right floating panel
+* today record popover opened from the top navigation
 
----
+Right floating panel modules:
 
-### 5.3 `detail.html` — Habit Branch Detail
+* current plan
+* soft execution heatmap
+* single-day detail
 
-The detail page shows one habit branch.
+Detail page rules:
 
-It should include:
+* Keep the same top navigation.
+* `今日记录` can record today's current habit from the detail page.
+* Support selected month and selected week.
+* Show at most 7 day objects for a selected week.
+* If a week has fewer actual days in the selected month, show only those actual days.
+* Collapsed right panel arrow points right.
+* Expanded right panel arrow points left.
+* Current plan includes a modify-plan action that returns to `create.html`.
+* Long plan, heatmap, note, or reason content scrolls inside the drawer modules.
 
-* Wish
-* Golden behavior
-* Micro-habit
-* Entry action
-* Real action
-* Natural prompt
-* Three-day trial status
-* Leaf timeline
-* Daily record card
-* Missed-day reason selection
-* Light adjustment suggestion
+The heatmap can reference GitHub contributions structurally, but it must feel soft, organic, and non-engineering.
 
-It should not present failure as shame.
+### 6.4 `review.html` - Growth Reflection
 
-When users select “今天没有发生”, the interface should ask:
+The review page should show behavior insights:
 
-```text
-今天卡在哪里？
-```
-
-Then provide options:
-
-```text
-忘记了
-太累了
-时间不合适
-任务太大
-环境不支持
-突发事件
-情绪低落
-不想记录原因
-```
-
-The result should create a yellow leaf, not a failure warning.
-
----
-
-### 5.4 `review.html` — Growth Reflection
-
-The review page should show behavior insights.
-
-It should include:
-
-* Motivation observation
-* Ability observation
-* Prompt observation
+* motivation observation
+* ability observation
+* prompt observation
 * easiest time to complete
 * most common friction
 * most effective prompt
 * next adjustment suggestion
 
-The page should be calm and concise. It should not use complex charts unless they are lightweight and visually consistent.
+It should be calm and concise.
 
----
+### 6.5 `explore.html` - Optional Exploration Area
 
-### 5.5 `explore.html` — Optional Exploration Area
-
-The explore page should be optional.
-
-It can include:
+The explore page can include:
 
 * behavior inspiration cards
-* anonymous micro-glow wall
-* gentle habit examples
+* anonymous gentle trace wall
+* habit examples
 * same-goal room mockup
 
 It must not include:
@@ -337,114 +304,23 @@ It must not include:
 
 ---
 
-## 6. Visual Style
+## 7. Top Navigation
 
-The visual language should feel:
+The shared navigation is:
 
 ```text
-quiet, natural, soft, clear, organic, low-pressure
+花园
+设计
+复盘
+探索
+今日记录
 ```
 
-Recommended palette:
-
-* warm off-white background
-* sage green
-* moss green
-* soft wood brown
-* pale yellow
-* light blue-gray for neutral prompts
-
-Avoid:
-
-* harsh red
-* neon colors
-* heavy black
-* strong dashboard blue
-* competitive gamification colors
-
-The interface should use:
-
-* rounded cards
-* soft shadows
-* organic curves
-* SVG tree and leaves
-* calm transitions
-* visible whitespace
-* subtle hover feedback
+`今日记录` opens a fixed-height floating panel instead of navigating away when implemented on the home page. The existing static HTML may still link to `detail.html` until the interaction is implemented.
 
 ---
 
-## 7. Interaction Requirements
-
-Required interactions:
-
-* Home empty state navigates to creation flow.
-* Creation curve reveals node by node.
-* Completed nodes can be clicked to go back and edit.
-* Candidate behaviors can be selected through inspiration cards.
-* Focus map allows choosing a golden behavior.
-* Micro-habit generation supports three types:
-
-  * quantity reduction
-  * scene transition
-  * preparation action
-* Natural prompt generates:
-
-```text
-当我……之后，我就……
-```
-
-* Saving a habit creates a branch on the home tree.
-* Completing a real action creates a green leaf.
-* Completing only an entry action creates a pale leaf.
-* Missing a day creates a yellow leaf.
-* The user can return through a “我回来了” state.
-* The tree should preserve history even after interruption.
-
----
-
-## 8. Copy Rules
-
-The UI copy must be short.
-
-General rules:
-
-* One main sentence per screen.
-* Avoid long explanations.
-* Avoid theoretical language when possible.
-* Avoid judgmental wording.
-* Avoid excessive praise.
-* Avoid pressure words.
-
-Do not use:
-
-```text
-失败
-惩罚
-清零
-必须坚持
-战胜自己
-你太棒了
-落后
-排名
-打败别人
-```
-
-Prefer:
-
-```text
-先试试看
-今天只做第一步
-欢迎回来
-卡在哪里
-这也会留下来
-把它调轻一点
-先放到树上
-```
-
----
-
-## 9. Data Model Suggestion
+## 8. Data Model Suggestion
 
 Use a simple `habit` object:
 
@@ -459,13 +335,15 @@ Use a simple `habit` object:
   realAction: "学习 10 分钟",
   prompt: "晚饭后回到宿舍",
   promptSentence: "当我晚饭后回到宿舍之后，我就打开台灯并坐下。",
+  promptStrength: "visual-light",
   trialDays: 3,
   createdAt: "2026-06-10",
   records: [
     {
       date: "2026-06-10",
       status: "entry",
-      note: "完成了入场动作"
+      note: "完成了入场动作",
+      reason: ""
     }
   ],
   adjustments: []
@@ -475,21 +353,23 @@ Use a simple `habit` object:
 Record status values:
 
 ```text
-real       完成真实行动
-entry      完成入场动作
-downgrade  今天降级
-missed     今天没有发生
+real        completed the real action
+entry       completed the entry action
+downgrade   used a lighter version
+missed      did not happen today
 ```
+
+Missing days are rendered as quiet stones. They are not errors.
 
 ---
 
-## 10. Development Workflow
+## 9. Development Workflow
 
 When modifying the project:
 
 1. Read `CLAUDE.md`.
 2. Read related files in `docs/`.
-3. Use the matching skill.
+3. For river work, read `docs/RIVER_STAGE_SYSTEM.md` first.
 4. Modify only the necessary files.
 5. Keep the prototype static.
 6. Avoid framework introduction.
@@ -498,18 +378,21 @@ When modifying the project:
 
 ---
 
-## 11. Final Acceptance Standard
+## 10. Final Acceptance Standard
 
 The prototype is acceptable only if:
 
 * `index.html` can be opened directly.
-* The home page looks like a habit garden.
-* The creation flow uses a curve, not a form list.
-* The user can create a habit with minimal typing.
-* The habit appears as a branch.
-* Daily records appear as leaves.
-* Missed days become yellow leaves, not failure alerts.
+* The home page uses a fixed river background stage.
+* The river background does not carry real data.
+* The habit list appears in a left floating area.
+* No selected habit shows the core motto panel.
+* Selecting a habit shows current-month river objects.
+* Daily record status maps to lotus, leaves, stone, and ripple.
+* Today record is available through a fixed-height floating panel.
+* The detail page reuses the river background for one habit's week view.
+* The detail page has a collapsible right panel with plan, heatmap, and single-day detail.
+* The creation flow still reflects the Fogg model.
 * The interface avoids streak pressure.
-* The product clearly reflects the Fogg model through interaction.
 * The page has calm animations and visual feedback.
 * All text is short and low-pressure.

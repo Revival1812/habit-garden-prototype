@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>River Stage Lab</title>
+  <link rel="stylesheet" href="assets/css/river-stage.css">
+</head>
+<body class="river-lab-page debug-show-coordinates debug-show-slot debug-show-date debug-show-assets debug-show-week">
+  <main class="river-lab-shell">
+    <section class="river-lab-panel" aria-label="河流点位调试">
+      <div class="river-lab-panel__header">
+        <div>
+          <p class="river-lab-kicker">River Stage Lab</p>
+          <h1>单周点位调试</h1>
+        </div>
+        <a class="river-lab-link" href="index.html">回到花园</a>
+      </div>
+
+      <div class="river-lab-controls">
+        <label>
+          年份
+          <select id="labYear"></select>
+        </label>
+        <label>
+          月份
+          <select id="labMonth"></select>
+        </label>
+        <label>
+          周次
+          <select id="labWeek"></select>
+        </label>
+      </div>
+
+      <div class="river-lab-debug" aria-label="Debug 模式">
+        <label><input type="checkbox" data-debug-toggle="debug-show-coordinates" checked> 坐标点</label>
+        <label><input type="checkbox" data-debug-toggle="debug-show-slot" checked> slot 编号</label>
+        <label><input type="checkbox" data-debug-toggle="debug-show-date" checked> 日期</label>
+        <label><input type="checkbox" data-debug-toggle="debug-show-assets" checked> 状态物件</label>
+        <label><input type="checkbox" data-debug-toggle="debug-show-week" checked> 周信息</label>
+      </div>
+
+      <div id="labInfo" class="river-lab-info" aria-live="polite"></div>
+    </section>
+
+    <section id="riverLabStage" class="river-lab-stage" aria-label="河流背景单周点位"></section>
+    <div id="riverLabTooltip" class="river-lab-tooltip" hidden></div>
+  </main>
+
+  <script src="assets/js/river-stage-model.js"></script>
+  <script src="assets/js/river-stage-renderer.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var yearSelect = document.getElementById('labYear');
+      var monthSelect = document.getElementById('labMonth');
+      var weekSelect = document.getElementById('labWeek');
+      var info = document.getElementById('labInfo');
+      var stage = document.getElementById('riverLabStage');
+      var tooltip = document.getElementById('riverLabTooltip');
+
+      var statusSamples = ['real', 'entry', 'downgrade', 'missed', 'unrecorded', 'entry', 'real'];
+
+      function pad2(value) {
+        return String(value).padStart(2, '0');
+      }
+
+      function getMonthWeeks(year, monthIndex) {
+        var monthEnd = new Date(year, monthIndex + 1, 0).getDate();
+        var weeks = [];
+
+        for (var startDay = 1; startDay <= monthEnd; startDay += 7) {
+          var week = [];
+          var endDay = Math.min(startDay + 6, monthEnd);
+
+          for (var day = startDay; day <= endDay; day += 1) {
+            week.push({
+              year: year,
+              monthIndex: monthIndex,
+              day: day,
+              dateISO: year + '-' + pad2(monthIndex + 1) + '-' + pad2(day)
+            });
+          }
+
+          weeks.push(week);
+        }
+
+        return weeks;
+      }
+
+      function getStatusLabel(status) {
+        return window.RiverStageModel.getStatusLabel(status);
+      }
+
+      function makeRecord(day, index) {
+        var status = statusSamples[index % statusSamples.length];
+        if (status === 'unrecorded') return null;
+        return {
+          date: day.dateISO,
+          status: status,
+          note: ''
+        };
+      }
+
+      function fillSelects() {
+        var currentYear = new Date().getFullYear();
+        for (var year = currentYear - 2; year <= currentYear + 2; year += 1) {
+          var yearOption = document.createElement('option');
+          yearOption.value = String(year);
+          yearOption.textContent = String(year);
+          yearSelect.appendChild(yearOption);
+        }
+
+        for (var month = 0; month < 12; month += 1) {
+          var monthOption = document.createElement('option');
+          monthOption.value = String(month);
+          monthOption.textContent = String(month + 1) + ' 月';
+          monthSelect.appendChild(monthOption);
+        }
+
+        yearSelect.value = '2026';
+        monthSelect.value = '2';
+      }
+
+      function updateWeekOptions() {
+        var year = Number(yearSelect.value);
+        var monthIndex = Number(monthSelect.value);
+        var previous = Number(weekSelect.value || 0);
+        var weeks = getMonthWeeks(year, monthIndex);
+
+        weekSelect.replaceChildren();
+        weeks.forEach(function (week, index) {
+          var first = week[0];
+          var last = week[week.length - 1];
+          var option = document.createElement('option');
+          option.value = String(index);
+          option.textContent = '第 ' + (index + 1) + ' 周（' + (monthIndex + 1) + '.' + first.day + ' - ' + (monthIndex + 1) + '.' + last.day + '）';
+          weekSelect.appendChild(option);
+        });
+
+        weekSelect.value = String(Math.min(previous, weeks.length - 1));
+      }
+
+      function renderInfo(year, monthIndex, weekIndex, week) {
+        var first = week[0];
+        var last = week[week.length - 1];
+        info.innerHTML = '';
+
+        var title = document.createElement('strong');
+        title.textContent = year + ' 年 ' + (monthIndex + 1) + ' 月 · 第 ' + (weekIndex + 1) + ' 周';
+        info.appendChild(title);
+
+        var range = document.createElement('span');
+        range.textContent = (monthIndex + 1) + '.' + first.day + ' - ' + (monthIndex + 1) + '.' + last.day;
+        info.appendChild(range);
+
+        var count = document.createElement('span');
+        count.textContent = '本周 ' + week.length + ' 天';
+        info.appendChild(count);
+      }
+
+      function renderLab() {
+        var year = Number(yearSelect.value);
+        var monthIndex = Number(monthSelect.value);
+        var weeks = getMonthWeeks(year, monthIndex);
+        var weekIndex = Math.min(Number(weekSelect.value || 0), weeks.length - 1);
+        var week = weeks[weekIndex] || [];
+        var layer;
+
+        window.RiverStageRenderer.renderRiverBackground(stage, { mode: 'lab' });
+        layer = stage.querySelector('.river-stage__record-layer');
+        window.RiverStageRenderer.clearRiverLayer(stage);
+
+        week.forEach(function (day, index) {
+          var slot = window.RiverStageRenderer.RIVER_WEEK_SLOTS[index];
+          var record = makeRecord(day, index);
+          var item = window.RiverStageRenderer.renderRiverItem(layer, {
+            dateISO: day.dateISO,
+            day: day.day,
+            slot: slot.slot,
+            x: slot.x,
+            y: slot.y
+          }, record, {});
+          var status = record ? record.status : 'unrecorded';
+
+          item.dataset.week = String(weekIndex + 1);
+          item.dataset.coordinates = 'x ' + slot.x + ' / y ' + slot.y;
+          item.dataset.statusLabel = getStatusLabel(status);
+
+          var meta = document.createElement('span');
+          meta.className = 'river-lab-marker-meta';
+          meta.innerHTML = '<b class="river-lab-slot">S' + slot.slot + '</b><b class="river-lab-date">' + (monthIndex + 1) + '.' + day.day + '</b><b class="river-lab-coordinates">' + slot.x + ',' + slot.y + '</b>';
+          item.appendChild(meta);
+        });
+
+        renderInfo(year, monthIndex, weekIndex, week);
+      }
+
+      function showTooltip(event) {
+        var item = event.target.closest('[data-river-item="true"]');
+        if (!item) return;
+
+        tooltip.innerHTML = '';
+        [
+          item.dataset.date,
+          '第 ' + item.dataset.week + ' 周',
+          'slot ' + item.dataset.slot,
+          item.dataset.statusLabel,
+          item.dataset.coordinates
+        ].forEach(function (line) {
+          var row = document.createElement('div');
+          row.textContent = line;
+          tooltip.appendChild(row);
+        });
+
+        tooltip.hidden = false;
+        tooltip.style.left = event.clientX + 14 + 'px';
+        tooltip.style.top = event.clientY + 14 + 'px';
+      }
+
+      function hideTooltip() {
+        tooltip.hidden = true;
+      }
+
+      function bindEvents() {
+        yearSelect.addEventListener('change', function () {
+          updateWeekOptions();
+          renderLab();
+        });
+        monthSelect.addEventListener('change', function () {
+          updateWeekOptions();
+          renderLab();
+        });
+        weekSelect.addEventListener('change', renderLab);
+
+        document.querySelectorAll('[data-debug-toggle]').forEach(function (toggle) {
+          toggle.addEventListener('change', function () {
+            document.body.classList.toggle(toggle.dataset.debugToggle, toggle.checked);
+          });
+        });
+
+        stage.addEventListener('mousemove', showTooltip);
+        stage.addEventListener('mouseleave', hideTooltip);
+      }
+
+      fillSelects();
+      updateWeekOptions();
+      bindEvents();
+      renderLab();
+    })();
+  </script>
+</body>
+</html>

@@ -6,12 +6,26 @@
   <title>习惯花园</title>
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/river-stage.css" />
   <link rel="stylesheet" href="assets/css/garden.css" />
   <script defer src="assets/js/app-state.js"></script>
-  <script defer src="assets/js/micro-interactions.js"></script>
+  <script defer src="assets/js/river-stage-model.js"></script>
+  <script defer src="assets/js/today-record-popover.js"></script>
   <script defer src="assets/js/garden.js"></script>
 </head>
 <body>
-  <div id="garden-root"></div>
+  <div class="page-wrap">
+    <nav class="top-nav" aria-label="主导航">
+      <a href="index.html" class="active">花园</a>
+      <a href="create.html">设计</a>
+      <a href="review.html">复盘</a>
+      <a href="explore.html">探索</a>
+      <a href="#" data-nav="today-record">今日记录</a>
+    </nav>
+
+    <main id="gardenApp" class="garden-page river-ready-page">
+      <section id="riverHomeMount" class="river-home-mount" aria-label="河流习惯首页"></section>
+    </main>
+  </div>
 </body>
 </html>

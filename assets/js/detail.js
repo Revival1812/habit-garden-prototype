@@ -1,452 +1,663 @@
 (function () {
   'use strict';
 
-  var root = null;
-  var habit = null;
-  var showMissedReasons = false;
+  var STORAGE_KEYS = {
+    selectedHabitId: 'habitGarden.selectedHabitId',
+    detailSelectedMonth: 'habitGarden.detailSelectedMonth',
+    detailSelectedWeek: 'habitGarden.detailSelectedWeek',
+    detailDrawerCollapsed: 'habitGarden.detailDrawerCollapsed',
+    editingHabitId: 'habitGarden.editingHabitId'
+  };
 
-  var recordOptions = [
-    {
-      status: 'real',
-      label: '完成真实行动',
-      note: '这片绿叶留下来了。'
-    },
-    {
-      status: 'entry',
-      label: '完成入场动作',
-      note: '第一步也会留下来。'
-    },
-    {
-      status: 'downgrade',
-      label: '今天先降级',
-      note: '小芽也算今天的痕迹。'
-    },
-    {
-      status: 'missed',
-      label: '今天没有发生',
-      note: '这也会留下来。'
+  var state = {
+    habit: null,
+    selectedHabitId: '',
+    selectedYear: 0,
+    selectedMonthIndex: 0,
+    selectedWeekIndex: 0,
+    selectedDate: '',
+    selectedHeatmapDate: '',
+    selectedHeatmapYear: new Date().getFullYear(),
+    drawerCollapsed: false
+  };
+
+  function pad2(value) {
+    return String(value).padStart(2, '0');
+  }
+
+  function createElement(tagName, className, text) {
+    var element = document.createElement(tagName);
+    if (className) element.className = className;
+    if (typeof text === 'string') element.textContent = text;
+    return element;
+  }
+
+  function toISODate(date) {
+    if (window.RiverStageModel && typeof window.RiverStageModel.toISODate === 'function') {
+      return window.RiverStageModel.toISODate(date);
     }
-  ];
+    return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
+  }
 
-  var missedReasons = [
-    '忘记了',
-    '太累了',
-    '时间不合适',
-    '任务太大',
-    '环境不支持',
-    '突发事件',
-    '情绪低落',
-    '不想记录原因'
-  ];
-
-  function init() {
-    root = document.getElementById('detail-root');
-    if (!root || !window.AppState) return;
-
-    habit = AppState.getSelectedHabit();
-    if (!habit) {
-      var habits = AppState.getHabits();
-      if (habits.length) {
-        habit = habits[0];
-        AppState.setSelectedHabitId(habit.id);
-      }
+  function getTodayISO() {
+    if (window.AppState && typeof window.AppState.getTodayISO === 'function') {
+      return window.AppState.getTodayISO();
     }
+    return toISODate(new Date());
+  }
 
-    if (!habit) {
-      renderEmptyState();
-      return;
+  function getSelectedHabitId() {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.selectedHabitId) || '';
+    } catch (error) {
+      return '';
     }
-
-    render();
   }
 
-  function render() {
-    root.innerHTML = '';
-    root.appendChild(renderHeader());
-
-    var layout = document.createElement('section');
-    layout.className = 'detail-layout';
-    layout.setAttribute('aria-label', '习惯枝桠详情');
-    layout.appendChild(renderSummary());
-    layout.appendChild(renderTimelinePanel());
-    layout.appendChild(renderRecordCard());
-    root.appendChild(layout);
-  }
-
-  function renderHeader() {
-    var header = document.createElement('header');
-    header.className = 'detail-header';
-
-    var titleWrap = document.createElement('div');
-    var kicker = document.createElement('span');
-    kicker.className = 'detail-kicker';
-    kicker.textContent = '习惯枝桠';
-
-    var title = document.createElement('h1');
-    title.className = 'detail-title';
-    title.textContent = habit.wish || '一个容易发生的行为';
-
-    titleWrap.appendChild(kicker);
-    titleWrap.appendChild(title);
-
-    var back = document.createElement('a');
-    back.className = 'btn btn--secondary';
-    back.href = 'index.html';
-    back.textContent = '返回花园';
-
-    header.appendChild(titleWrap);
-    header.appendChild(back);
-    return header;
-  }
-
-  function renderSummary() {
-    var card = document.createElement('aside');
-    card.className = 'card detail-card summary-card';
-    card.setAttribute('aria-label', '当前方案');
-
-    var title = document.createElement('h2');
-    title.className = 'section-title';
-    title.textContent = '当前方案';
-    card.appendChild(title);
-
-    appendPlanRow(card, '愿望', habit.wish || '还没写下');
-    appendPlanRow(card, '黄金行为', habit.goldenBehavior || '还没选择');
-    appendPlanRow(card, '入场动作', habit.entryAction || '先做第一步');
-    appendPlanRow(card, '真实行动', habit.realAction || '轻一点开始');
-    appendPlanRow(card, '自然提示句', habit.promptSentence || '当我……之后，我就……');
-
-    var trial = document.createElement('span');
-    trial.className = 'trial-pill';
-    trial.textContent = getTrialStatus();
-    card.appendChild(trial);
-
-    var health = document.createElement('div');
-    health.className = 'health-card';
-    health.innerHTML = '<span class="health-card__label">方案健康度</span>' + getHealthTip();
-    card.appendChild(health);
-
-    return card;
-  }
-
-  function appendPlanRow(parent, label, value) {
-    var row = document.createElement('div');
-    row.className = 'plan-row';
-
-    var labelEl = document.createElement('span');
-    labelEl.className = 'plan-label';
-    labelEl.textContent = label;
-
-    var valueEl = document.createElement('div');
-    valueEl.className = 'plan-value';
-    valueEl.textContent = value;
-
-    row.appendChild(labelEl);
-    row.appendChild(valueEl);
-    parent.appendChild(row);
-  }
-
-  function renderTimelinePanel() {
-    var panel = document.createElement('section');
-    panel.className = 'card detail-card branch-panel';
-    panel.setAttribute('aria-label', '叶子时间轴');
-
-    panel.appendChild(renderBranchVisual());
-
-    var head = document.createElement('div');
-    head.className = 'timeline-head';
-
-    var title = document.createElement('h2');
-    title.className = 'section-title';
-    title.textContent = '叶子时间轴';
-
-    var helper = document.createElement('p');
-    helper.className = 'helper-text';
-    helper.textContent = getTimelineHelper();
-
-    head.appendChild(title);
-    head.appendChild(helper);
-    panel.appendChild(head);
-
-    var timeline = document.createElement('div');
-    timeline.className = 'leaf-timeline';
-
-    var records = getRecords();
-    if (!records.length) {
-      var empty = document.createElement('div');
-      empty.className = 'timeline-empty';
-      empty.textContent = '今天可以先留下第一片叶子。';
-      timeline.appendChild(empty);
+  function setSelectedHabitId(id) {
+    if (!id) return;
+    if (window.AppState && typeof window.AppState.setSelectedHabitId === 'function') {
+      window.AppState.setSelectedHabitId(id);
     } else {
-      records.slice().reverse().forEach(function (record) {
-        timeline.appendChild(renderTimelineItem(record));
-      });
+      localStorage.setItem(STORAGE_KEYS.selectedHabitId, id);
+    }
+    state.selectedHabitId = id;
+  }
+
+  function getHabits() {
+    if (window.AppState && typeof window.AppState.getHabits === 'function') {
+      return window.AppState.getHabits();
     }
 
-    panel.appendChild(timeline);
-    return panel;
+    try {
+      var raw = localStorage.getItem('habitGarden.habits');
+      var parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      return [];
+    }
   }
 
-  function renderBranchVisual() {
-    var visual = document.createElement('div');
-    visual.className = 'branch-visual';
-    visual.setAttribute('aria-hidden', 'true');
-
-    var line = document.createElement('div');
-    line.className = 'branch-line branch-appear';
-    visual.appendChild(line);
-
-    var bud = document.createElement('div');
-    bud.className = 'branch-bud';
-    visual.appendChild(bud);
-
-    var records = getRecords().slice(-8);
-    if (!records.length) {
-      var seed = document.createElement('span');
-      seed.className = 'visual-leaf visual-leaf--entry leaf-grow';
-      seed.style.left = '58%';
-      seed.style.top = '46%';
-      visual.appendChild(seed);
-      return visual;
+  function getHabitById(id) {
+    if (!id) return null;
+    if (window.AppState && typeof window.AppState.getHabitById === 'function') {
+      return window.AppState.getHabitById(id);
     }
 
-    records.forEach(function (record, index) {
-      var leaf = document.createElement('span');
-      leaf.className = 'visual-leaf visual-leaf--' + record.status + ' leaf-grow';
-      leaf.style.left = (22 + index * 8.3) + '%';
-      leaf.style.top = (52 - (index % 3) * 12) + '%';
-      leaf.style.animationDelay = (index * 0.06) + 's';
-      visual.appendChild(leaf);
-    });
-
-    return visual;
-  }
-
-  function renderTimelineItem(record) {
-    var item = document.createElement('div');
-    item.className = 'timeline-item';
-
-    var leaf = document.createElement('span');
-    leaf.className = 'timeline-leaf timeline-leaf--' + record.status + ' leaf-grow';
-
-    var body = document.createElement('div');
-    var date = document.createElement('div');
-    date.className = 'timeline-date';
-    date.textContent = formatDate(record.date);
-
-    var copy = document.createElement('div');
-    copy.className = 'timeline-copy';
-    copy.textContent = getRecordCopy(record);
-
-    body.appendChild(date);
-    body.appendChild(copy);
-    item.appendChild(leaf);
-    item.appendChild(body);
-
-    return item;
-  }
-
-  function renderRecordCard() {
-    var card = document.createElement('aside');
-    card.className = 'card detail-card record-card';
-    card.setAttribute('aria-label', '今日记录');
-
-    var title = document.createElement('h2');
-    title.className = 'record-card__title';
-    title.textContent = '今天从这里开始。';
-    card.appendChild(title);
-
-    var helper = document.createElement('p');
-    helper.className = 'record-card__helper';
-    helper.textContent = getTodayRecord() ? '今天的痕迹可以改一改。' : '选一个最贴近今天的状态。';
-    card.appendChild(helper);
-
-    var options = document.createElement('div');
-    options.className = 'record-options';
-
-    recordOptions.forEach(function (option) {
-      var button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'record-option';
-      button.innerHTML = '<span class="record-dot record-dot--' + option.status + '"></span><span>' + option.label + '</span>';
-      button.addEventListener('click', function () {
-        if (option.status === 'missed') {
-          showMissedReasons = true;
-          render();
-          return;
-        }
-        saveRecord(option.status);
-      });
-      options.appendChild(button);
-    });
-
-    card.appendChild(options);
-    card.appendChild(renderMissedPanel());
-
-    var message = document.createElement('div');
-    message.className = 'record-message';
-    message.textContent = getRecordMessage();
-    card.appendChild(message);
-
-    return card;
-  }
-
-  function renderMissedPanel() {
-    var panel = document.createElement('div');
-    panel.className = 'missed-panel' + (showMissedReasons ? ' is-open' : '');
-
-    var title = document.createElement('h3');
-    title.className = 'missed-panel__title';
-    title.textContent = '今天卡在哪里？';
-    panel.appendChild(title);
-
-    var options = document.createElement('div');
-    options.className = 'reason-options';
-
-    missedReasons.forEach(function (reason) {
-      var button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'reason-option';
-      button.innerHTML = '<span class="record-dot record-dot--missed"></span><span>' + reason + '</span>';
-      button.addEventListener('click', function () {
-        saveRecord('missed', reason);
-      });
-      options.appendChild(button);
-    });
-
-    panel.appendChild(options);
-    return panel;
-  }
-
-  function saveRecord(status, reason) {
-    var option = getRecordOption(status);
-    var record = {
-      date: AppState.getTodayISO(),
-      status: status,
-      note: option.note
-    };
-
-    if (reason) {
-      record.reason = reason;
-      record.note = '这也会留下来。';
-    }
-
-    if (!Array.isArray(habit.records)) {
-      habit.records = [];
-      AppState.updateHabit(habit.id, { records: habit.records });
-    }
-
-    var updated = AppState.addRecord(habit.id, record);
-    if (updated) {
-      habit = updated;
-      AppState.setSelectedHabitId(habit.id);
-    }
-
-    showMissedReasons = false;
-    render();
-  }
-
-  function renderEmptyState() {
-    root.innerHTML = '';
-    var wrap = document.createElement('section');
-    wrap.className = 'empty-detail fade-in';
-
-    var card = document.createElement('div');
-    card.className = 'card';
-
-    var title = document.createElement('h1');
-    title.textContent = '还没有枝桠。';
-
-    var copy = document.createElement('p');
-    copy.textContent = '先放下一个容易发生的行为。';
-
-    var link = document.createElement('a');
-    link.className = 'btn btn--primary';
-    link.href = 'create.html';
-    link.textContent = '去设计';
-
-    card.appendChild(title);
-    card.appendChild(copy);
-    card.appendChild(link);
-    wrap.appendChild(card);
-    root.appendChild(wrap);
-  }
-
-  function getRecords() {
-    return Array.isArray(habit.records) ? habit.records : [];
-  }
-
-  function getTodayRecord() {
-    var today = AppState.getTodayISO();
-    var records = getRecords();
-    for (var i = 0; i < records.length; i += 1) {
-      if (records[i].date === today) return records[i];
+    var habits = getHabits();
+    for (var i = 0; i < habits.length; i += 1) {
+      if (habits[i] && habits[i].id === id) return habits[i];
     }
     return null;
   }
 
-  function getRecordOption(status) {
-    for (var i = 0; i < recordOptions.length; i += 1) {
-      if (recordOptions[i].status === status) return recordOptions[i];
+  function getHabitTitle(habit) {
+    return habit.wish || habit.goldenBehavior || habit.entryAction || '一个习惯';
+  }
+
+  function getHabitSummary(habit) {
+    if (habit.promptSentence) return habit.promptSentence;
+    if (habit.entryAction) return habit.entryAction + '。';
+    if (habit.goldenBehavior) return habit.goldenBehavior + '。';
+    return '先从第一步开始。';
+  }
+
+  function getPlanRows(habit) {
+    return [
+      { label: '愿望', value: habit.wish },
+      { label: '黄金行为', value: habit.goldenBehavior },
+      { label: '入场动作', value: habit.entryAction },
+      { label: '真实行动', value: habit.realAction },
+      { label: '自然提示', value: habit.promptSentence || habit.prompt },
+      { label: '当前提示强度', value: habit.promptStrength }
+    ].filter(function (row) {
+      return row.value !== undefined && row.value !== null && String(row.value).trim() !== '';
+    });
+  }
+
+  function currentWeekIndexForDate(date) {
+    return Math.floor((date.getDate() - 1) / 7);
+  }
+
+  function getMonthWeeks(year, monthIndex) {
+    if (window.RiverStageRenderer && typeof window.RiverStageRenderer.getMonthWeeksBySlots === 'function') {
+      return window.RiverStageRenderer.getMonthWeeksBySlots(year, monthIndex);
     }
-    return recordOptions[1];
+
+    var monthEnd = new Date(year, monthIndex + 1, 0).getDate();
+    var weeks = [];
+    for (var startDay = 1; startDay <= monthEnd; startDay += 7) {
+      var endDay = Math.min(startDay + 6, monthEnd);
+      var days = [];
+      for (var day = startDay; day <= endDay; day += 1) {
+        days.push({
+          year: year,
+          monthIndex: monthIndex,
+          day: day,
+          dateISO: year + '-' + pad2(monthIndex + 1) + '-' + pad2(day)
+        });
+      }
+      weeks.push({ weekIndex: weeks.length + 1, startDay: startDay, endDay: endDay, days: days });
+    }
+    return weeks;
   }
 
-  function getRecordCopy(record) {
-    var labelMap = {
-      real: '完成真实行动',
-      entry: '完成入场动作',
-      downgrade: '今天先降级',
-      missed: '今天没有发生'
+  function clampWeekIndex(year, monthIndex, weekIndex) {
+    var weeks = getMonthWeeks(year, monthIndex);
+    if (!weeks.length) return 0;
+    return Math.max(0, Math.min(Number(weekIndex) || 0, weeks.length - 1));
+  }
+
+  function readDetailViewState() {
+    var now = new Date();
+    var monthKey = localStorage.getItem(STORAGE_KEYS.detailSelectedMonth);
+    var weekValue = localStorage.getItem(STORAGE_KEYS.detailSelectedWeek);
+    var year = now.getFullYear();
+    var monthIndex = now.getMonth();
+    var weekIndex = currentWeekIndexForDate(now);
+
+    if (monthKey && /^\d{4}-\d{2}$/.test(monthKey)) {
+      var parts = monthKey.split('-').map(Number);
+      year = parts[0];
+      monthIndex = parts[1] - 1;
+      weekIndex = Number.isFinite(Number(weekValue)) ? Number(weekValue) : weekIndex;
+    }
+
+    state.selectedYear = year;
+    state.selectedMonthIndex = monthIndex;
+    state.selectedWeekIndex = clampWeekIndex(year, monthIndex, weekIndex);
+    state.drawerCollapsed = localStorage.getItem(STORAGE_KEYS.detailDrawerCollapsed) === 'true';
+  }
+
+  function saveDetailViewState() {
+    localStorage.setItem(
+      STORAGE_KEYS.detailSelectedMonth,
+      state.selectedYear + '-' + pad2(state.selectedMonthIndex + 1)
+    );
+    localStorage.setItem(STORAGE_KEYS.detailSelectedWeek, String(state.selectedWeekIndex));
+  }
+
+  function saveDrawerState() {
+    localStorage.setItem(STORAGE_KEYS.detailDrawerCollapsed, state.drawerCollapsed ? 'true' : 'false');
+  }
+
+  function getSelectedWeek() {
+    var weeks = getMonthWeeks(state.selectedYear, state.selectedMonthIndex);
+    state.selectedWeekIndex = clampWeekIndex(state.selectedYear, state.selectedMonthIndex, state.selectedWeekIndex);
+    return weeks[state.selectedWeekIndex] || null;
+  }
+
+  function getRecordForDate(habit, dateISO) {
+    if (window.RiverStageModel && typeof window.RiverStageModel.getRecordForDate === 'function') {
+      return window.RiverStageModel.getRecordForDate(habit, dateISO);
+    }
+    if (!habit || !Array.isArray(habit.records)) return null;
+    for (var i = 0; i < habit.records.length; i += 1) {
+      if (habit.records[i] && habit.records[i].date === dateISO) return habit.records[i];
+    }
+    return null;
+  }
+
+  function getStatusLabel(status) {
+    if (window.RiverStageModel && typeof window.RiverStageModel.getStatusLabel === 'function') {
+      return window.RiverStageModel.getStatusLabel(status);
+    }
+    return status || '未记录';
+  }
+
+  function formatMonthTitle(year, monthIndex) {
+    return year + ' 年 ' + (monthIndex + 1) + ' 月';
+  }
+
+  function formatWeekRange(week) {
+    if (!week || !week.days.length) return '';
+    var first = week.days[0];
+    var last = week.days[week.days.length - 1];
+    return (first.monthIndex + 1) + '.' + first.day + ' - ' + (last.monthIndex + 1) + '.' + last.day;
+  }
+
+  function formatDateLabelFromISO(dateISO) {
+    var parts = String(dateISO || '').split('-').map(Number);
+    if (parts.length < 3 || parts.some(function (part) { return Number.isNaN(part); })) return dateISO || '';
+    return parts[1] + ' 月 ' + parts[2] + ' 日';
+  }
+
+  function getYearFromISO(dateISO) {
+    var parts = String(dateISO || '').split('-').map(Number);
+    return parts.length >= 3 && !Number.isNaN(parts[0]) ? parts[0] : new Date().getFullYear();
+  }
+
+  function getDayDetail(habit, dateISO) {
+    var record = getRecordForDate(habit, dateISO);
+    var status = record ? record.status : 'unrecorded';
+    return {
+      dateISO: dateISO,
+      dateLabel: formatDateLabelFromISO(dateISO),
+      status: status,
+      label: getStatusLabel(status),
+      note: record && (record.note || record.reason) ? (record.note || record.reason) : ''
     };
-    var parts = [labelMap[record.status] || '留下痕迹'];
-    if (record.reason) parts.push(record.reason);
-    if (record.note) parts.push(record.note);
-    return parts.join(' · ');
   }
 
-  function getRecordMessage() {
-    var today = getTodayRecord();
-    if (!today) return '记录后，首页枝桠会长出今天的叶子。';
-    if (today.status === 'missed') return '黄叶留下来了，明天可以调轻一点。';
-    if (today.status === 'downgrade') return '小芽留下来了，今天先这样也可以。';
-    return '这片叶子留下来了。';
+  function getTodayPopoverHost() {
+    var host = document.getElementById('todayRecordPopoverHost');
+    if (host) return host;
+
+    host = document.createElement('div');
+    host.id = 'todayRecordPopoverHost';
+    host.className = 'today-record-host';
+    document.body.appendChild(host);
+    return host;
   }
 
-  function getTimelineHelper() {
-    var count = getRecords().length;
-    if (!count) return '还没有叶子';
-    return count + ' 个痕迹';
+  function isTodayPopoverOpen() {
+    var host = getTodayPopoverHost();
+    var popover = host.querySelector('.today-record-popover');
+    return !!(popover && !popover.hidden);
   }
 
-  function getTrialStatus() {
-    var days = habit.trialDays || 3;
-    var createdAt = habit.createdAt || AppState.getTodayISO();
-    var current = Math.min(days, Math.max(1, daysBetween(createdAt, AppState.getTodayISO()) + 1));
-    return '试运行第 ' + current + ' / ' + days + ' 天';
+  function renderTodayPopover() {
+    if (!window.TodayRecordPopover) return null;
+
+    return window.TodayRecordPopover.renderTodayRecordPopover(getTodayPopoverHost(), getHabits(), {
+      source: 'detail',
+      focusHabitId: getSelectedHabitId(),
+      onSaveRecord: refreshDetailAfterTodayRecord
+    });
   }
 
-  function getHealthTip() {
-    var latest = getRecords().slice(-1)[0];
-    if (!latest) return '先留下第一片叶子，再看哪里需要调轻。';
-    if (latest.status === 'real') return '真实行动已经发生，可以保留现在的提示点。';
-    if (latest.status === 'entry') return '入场动作能发生，下一步可以继续轻一点。';
-    if (latest.status === 'downgrade') return '降级版本可用，说明动作还有调整空间。';
-    return '黄叶也有用，明天可以换个更自然的提示点。';
+  function refreshDetailAfterTodayRecord(habitId) {
+    var selectedHabitId = getSelectedHabitId();
+    if (!selectedHabitId || selectedHabitId === habitId) {
+      renderDetailPage();
+    }
   }
 
-  function daysBetween(a, b) {
-    var start = new Date(a + 'T00:00:00');
-    var end = new Date(b + 'T00:00:00');
-    var diff = end.getTime() - start.getTime();
-    if (Number.isNaN(diff)) return 0;
-    return Math.floor(diff / 86400000);
+  function shiftMonth(delta) {
+    var next = new Date(state.selectedYear, state.selectedMonthIndex + delta, 1);
+    state.selectedYear = next.getFullYear();
+    state.selectedMonthIndex = next.getMonth();
+    state.selectedWeekIndex = 0;
+    state.selectedDate = '';
+    saveDetailViewState();
+    renderDetailPage();
   }
 
-  function formatDate(value) {
-    if (!value) return '今天';
-    var parts = value.split('-');
-    if (parts.length !== 3) return value;
-    return Number(parts[1]) + ' 月 ' + Number(parts[2]) + ' 日';
+  function setSelectedWeekIndex(weekIndex) {
+    state.selectedWeekIndex = clampWeekIndex(state.selectedYear, state.selectedMonthIndex, weekIndex);
+    state.selectedDate = '';
+    saveDetailViewState();
+    renderDetailPage();
+  }
+
+  function selectDay(dateISO) {
+    state.selectedDate = dateISO;
+    state.selectedHeatmapDate = dateISO;
+    state.selectedHeatmapYear = getYearFromISO(dateISO);
+    state.drawerCollapsed = false;
+    saveDrawerState();
+    renderDetailPage();
+  }
+
+  function selectHeatmapDay(detail) {
+    var dateISO = typeof detail === 'string' ? detail : (detail && detail.date);
+    if (!dateISO) return;
+    state.selectedHeatmapDate = dateISO;
+    state.selectedDate = dateISO;
+    state.selectedHeatmapYear = (detail && detail.year) || getYearFromISO(dateISO);
+    state.drawerCollapsed = false;
+    saveDrawerState();
+    renderDetailPage();
+  }
+
+  function selectHeatmapYear(year) {
+    state.selectedHeatmapYear = Number(year) || new Date().getFullYear();
+    renderDetailPage();
+  }
+
+  function toggleDrawer() {
+    state.drawerCollapsed = !state.drawerCollapsed;
+    saveDrawerState();
+    renderDetailPage();
+  }
+
+  function saveEditingHabitId(habitId) {
+    if (!habitId) return;
+    localStorage.setItem(STORAGE_KEYS.editingHabitId, habitId);
+    localStorage.setItem(STORAGE_KEYS.selectedHabitId, habitId);
+  }
+
+  function renderEmpty(container) {
+    container.innerHTML = '';
+    container.className = 'river-detail-mount river-detail-mount--empty';
+
+    var card = createElement('section', 'detail-empty-panel river-fade-in');
+    card.setAttribute('aria-label', '未选择习惯');
+
+    var title = createElement('h1', 'detail-empty-panel__title', '还没选中习惯。');
+    var copy = createElement('p', 'detail-empty-panel__copy', '先回花园，从一个习惯开始。');
+    var action = document.createElement('a');
+    action.className = 'btn btn--primary';
+    action.href = 'index.html';
+    action.textContent = '回到花园';
+
+    card.appendChild(title);
+    card.appendChild(copy);
+    card.appendChild(action);
+    container.appendChild(card);
+  }
+
+  function renderHabitPanel(parent, habit, week) {
+    var panel = createElement('section', 'river-detail-panel river-fade-in');
+    panel.setAttribute('aria-label', '当前习惯信息');
+
+    var top = createElement('div', 'river-detail-panel__top');
+    var titleWrap = createElement('div', 'river-detail-panel__title-wrap');
+
+    var eyebrow = createElement('p', 'river-detail-panel__eyebrow', '这周的痕迹');
+    var title = createElement('h1', 'river-detail-panel__title', getHabitTitle(habit));
+    var summary = createElement('p', 'river-detail-panel__summary', getHabitSummary(habit));
+
+    titleWrap.appendChild(eyebrow);
+    titleWrap.appendChild(title);
+    titleWrap.appendChild(summary);
+
+    var back = document.createElement('a');
+    back.className = 'river-detail-panel__back';
+    back.href = 'index.html';
+    back.textContent = '回到花园';
+
+    top.appendChild(titleWrap);
+    top.appendChild(back);
+    panel.appendChild(top);
+
+    var monthControls = createElement('div', 'river-detail-month-controls');
+    var prev = createElement('button', 'river-detail-month-button', '上个月');
+    prev.type = 'button';
+    prev.addEventListener('click', function () { shiftMonth(-1); });
+
+    var month = createElement('strong', 'river-detail-month-label', formatMonthTitle(state.selectedYear, state.selectedMonthIndex));
+
+    var next = createElement('button', 'river-detail-month-button', '下个月');
+    next.type = 'button';
+    next.addEventListener('click', function () { shiftMonth(1); });
+
+    monthControls.appendChild(prev);
+    monthControls.appendChild(month);
+    monthControls.appendChild(next);
+    panel.appendChild(monthControls);
+
+    var weekControls = createElement('div', 'river-detail-week-controls');
+    var weekText = createElement(
+      'p',
+      'river-detail-week-label',
+      week ? '第 ' + week.weekIndex + ' 周 · ' + formatWeekRange(week) : '这一周'
+    );
+    var weekCount = createElement('p', 'river-detail-week-count', week ? '本周 ' + week.days.length + ' 天' : '');
+
+    var select = document.createElement('select');
+    select.className = 'river-detail-week-select';
+    select.setAttribute('aria-label', '选择周次');
+    getMonthWeeks(state.selectedYear, state.selectedMonthIndex).forEach(function (item, index) {
+      var option = document.createElement('option');
+      option.value = String(index);
+      option.textContent = '第 ' + item.weekIndex + ' 周';
+      option.selected = index === state.selectedWeekIndex;
+      select.appendChild(option);
+    });
+    select.addEventListener('change', function () {
+      setSelectedWeekIndex(Number(select.value));
+    });
+
+    weekControls.appendChild(weekText);
+    weekControls.appendChild(weekCount);
+    weekControls.appendChild(select);
+    panel.appendChild(weekControls);
+
+    parent.appendChild(panel);
+  }
+
+  function renderDayPanel(parent, habit) {
+    var panel = createElement('section', 'river-detail-day-panel river-fade-in');
+    panel.setAttribute('aria-label', '这一天');
+
+    var title = createElement('p', 'river-detail-day-panel__eyebrow', '这一天');
+    panel.appendChild(title);
+
+    if (!state.selectedDate) {
+      var empty = createElement('p', 'river-detail-day-panel__empty', '点选河面上的一天，看看它留下了什么。');
+      panel.appendChild(empty);
+      parent.appendChild(panel);
+      return;
+    }
+
+    var detail = getDayDetail(habit, state.selectedDate);
+    var date = createElement('h2', 'river-detail-day-panel__date', detail.dateLabel);
+    var status = createElement('p', 'river-detail-day-panel__status', detail.label);
+    panel.appendChild(date);
+    panel.appendChild(status);
+
+    if (detail.note) {
+      var note = createElement('p', 'river-detail-day-panel__note', detail.note);
+      panel.appendChild(note);
+    }
+
+    parent.appendChild(panel);
+  }
+
+  function renderPlanModule(parent, habit) {
+    var module = createElement('section', 'river-detail-drawer__module river-detail-plan-module drawer-panel plan-panel');
+    var title = createElement('h2', 'river-detail-drawer__title', '当前方案');
+    module.appendChild(title);
+
+    var body = createElement('div', 'river-detail-drawer__module-body drawer-panel-body');
+    var list = createElement('dl', 'river-detail-plan-list');
+    getPlanRows(habit).forEach(function (row) {
+      var item = createElement('div', 'river-detail-plan-list__item');
+      var term = createElement('dt', '', row.label);
+      var value = createElement('dd', '', String(row.value));
+      item.appendChild(term);
+      item.appendChild(value);
+      list.appendChild(item);
+    });
+    body.appendChild(list);
+
+    var action = document.createElement('a');
+    action.className = 'river-detail-plan-action';
+    action.href = 'create.html';
+    action.textContent = '调整方案';
+    action.addEventListener('click', function () {
+      saveEditingHabitId(habit.id);
+    });
+    body.appendChild(action);
+
+    var hint = createElement('p', 'river-detail-plan-hint', '已保存当前习惯，设计页后续可读取。');
+    body.appendChild(hint);
+
+    module.appendChild(body);
+    parent.appendChild(module);
+  }
+
+  function renderDrawerDayDetail(parent, habit) {
+    var detailDate = state.selectedHeatmapDate || state.selectedDate;
+    var module = createElement('section', 'river-detail-drawer__day-detail');
+
+    if (!detailDate) {
+      module.textContent = '点选一天，看看它留下了什么。';
+      parent.appendChild(module);
+      return;
+    }
+
+    var detail = getDayDetail(habit, detailDate);
+    var date = createElement('h3', 'river-detail-drawer__day-date', detail.dateLabel);
+    var status = createElement('p', 'river-detail-drawer__day-status', detail.label);
+    module.appendChild(date);
+    module.appendChild(status);
+
+    if (detail.note) {
+      var note = createElement('p', 'river-detail-drawer__day-note', detail.note);
+      module.appendChild(note);
+    }
+
+    parent.appendChild(module);
+  }
+
+  function renderHeatmapModule(parent, habit) {
+    var module = createElement('section', 'river-detail-drawer__module river-detail-heatmap-module drawer-panel heatmap-panel');
+    var title = createElement('h2', 'river-detail-drawer__title', '执行热力图');
+    module.appendChild(title);
+
+    var body = createElement('div', 'river-detail-drawer__module-body drawer-panel-body');
+    var heatmapMount = createElement('div', 'river-detail-heatmap-mount');
+    body.appendChild(heatmapMount);
+
+    if (window.HabitHeatmap && typeof window.HabitHeatmap.renderHabitHeatmap === 'function') {
+      window.HabitHeatmap.renderHabitHeatmap(heatmapMount, habit, {
+        scope: 'year',
+        title: '执行热力图',
+        year: state.selectedHeatmapYear || new Date().getFullYear(),
+        selectedDate: state.selectedHeatmapDate || state.selectedDate,
+        onYearChange: selectHeatmapYear,
+        onDayClick: function (detail) {
+          selectHeatmapDay(detail);
+        }
+      });
+    }
+
+    module.appendChild(body);
+    parent.appendChild(module);
+  }
+
+  function renderRightDrawer(parent, habit) {
+    var drawer = createElement(
+      'aside',
+      'river-detail-drawer-panel detail-side-drawer' + (state.drawerCollapsed ? ' is-collapsed' : ' is-open')
+    );
+    drawer.setAttribute('aria-label', '详情浮窗');
+
+    var toggle = createElement('button', 'river-detail-drawer-toggle drawer-toggle', state.drawerCollapsed ? '›' : '‹');
+    toggle.type = 'button';
+    toggle.setAttribute('aria-label', state.drawerCollapsed ? '展开' : '收起');
+    toggle.addEventListener('click', toggleDrawer);
+    drawer.appendChild(toggle);
+
+    if (!state.drawerCollapsed) {
+      var body = createElement('div', 'river-detail-drawer-body drawer-content drawer-content-horizontal');
+      renderPlanModule(body, habit);
+      renderHeatmapModule(body, habit);
+      drawer.appendChild(body);
+    }
+
+    parent.appendChild(drawer);
+  }
+
+  function renderWeekObjects(stage, habit) {
+    if (!window.RiverStageRenderer || !window.RiverStageInteractions) return;
+
+    window.RiverStageRenderer.renderWeekRiverOverlay(
+      stage,
+      habit,
+      state.selectedYear,
+      state.selectedMonthIndex,
+      state.selectedWeekIndex,
+      {
+        mode: 'detail',
+        selectedDate: state.selectedDate
+      }
+    );
+
+    window.RiverStageInteractions.bindRiverItemHover(stage);
+    window.RiverStageInteractions.bindRiverItemClick(stage, {
+      onClick: function (data) {
+        if (window.RiverStageInteractions && typeof window.RiverStageInteractions.hideRiverTooltip === 'function') {
+          window.RiverStageInteractions.hideRiverTooltip();
+        }
+
+        if (data.date === getTodayISO()) {
+          renderTodayPopover();
+          if (window.TodayRecordPopover) window.TodayRecordPopover.openTodayRecordPopover();
+          state.selectedDate = data.date;
+          state.selectedHeatmapDate = data.date;
+          state.selectedHeatmapYear = getYearFromISO(data.date);
+          state.drawerCollapsed = false;
+          saveDrawerState();
+          renderDetailPage();
+          return;
+        }
+
+        selectDay(data.date);
+      }
+    });
+  }
+
+  function renderDetailView(container, habit) {
+    container.innerHTML = '';
+    container.className = 'river-detail-mount';
+
+    var stage = createElement('section', 'river-detail-stage');
+    stage.setAttribute('aria-label', '河流详情舞台');
+    container.appendChild(stage);
+
+    if (window.RiverStageRenderer) {
+      window.RiverStageRenderer.renderRiverBackground(stage, { mode: 'detail' });
+    }
+
+    var overlay = createElement('div', 'river-detail-overlay');
+    stage.appendChild(overlay);
+
+    var week = getSelectedWeek();
+    renderHabitPanel(overlay, habit, week);
+    renderRightDrawer(overlay, habit);
+    renderWeekObjects(stage, habit);
+  }
+
+  function renderDetailPage() {
+    var mount = document.getElementById('riverDetailMount');
+    if (!mount) return;
+
+    state.selectedHabitId = getSelectedHabitId();
+    state.habit = getHabitById(state.selectedHabitId);
+    readDetailViewState();
+
+    if (!state.selectedHabitId || !state.habit) {
+      renderEmpty(mount);
+      return;
+    }
+
+    renderDetailView(mount, state.habit);
+  }
+
+  function bindNav() {
+    var todayLink = document.querySelector('[data-nav="today-record"]');
+    if (!todayLink) return;
+
+    todayLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (!window.TodayRecordPopover) return;
+
+      var selectedHabitId = getSelectedHabitId();
+      if (!selectedHabitId) {
+        var habits = getHabits();
+        if (habits.length) {
+          setSelectedHabitId(habits[0].id);
+          renderDetailPage();
+        }
+      }
+
+      if (isTodayPopoverOpen()) {
+        window.TodayRecordPopover.closeTodayRecordPopover();
+        return;
+      }
+
+      renderTodayPopover();
+      window.TodayRecordPopover.openTodayRecordPopover();
+    });
+  }
+
+  function init() {
+    bindNav();
+    renderDetailPage();
+    window.refreshRiverDetail = renderDetailPage;
   }
 
   if (document.readyState === 'loading') {

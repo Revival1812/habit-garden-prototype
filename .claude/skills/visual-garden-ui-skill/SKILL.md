@@ -1,24 +1,36 @@
-# .claude/skills/visual-garden-ui-skill/SKILL.md
-
 ---
-
 name: visual-garden-ui-skill
-description: Use this skill when designing layout, visual hierarchy, colors, SVGs, tree visuals, leaf visuals, garden metaphor, or CSS aesthetics for the habit garden prototype.
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+description: Use this skill when designing layout, visual hierarchy, colors, SVGs, river stage visuals, water flow, floating leaves, lotus, stones, ripples, soft natural UI, or CSS aesthetics for the Habit Garden prototype. Use it to keep the new river-stage direction and prevent the old tree or branch system from returning as the home visual.
+---
 
 # Visual Garden UI Skill
 
 ## Purpose
 
-Use this skill to keep the interface visually consistent with the habit garden metaphor.
+Use this skill to keep the interface visually consistent with the current Habit Garden direction:
+
+```text
+river stage
+soft water flow
+floating leaves
+lotus traces
+small stones
+faint ripples
+low-pressure return
+```
+
+The name "garden" can remain at product level, but the home visual is no longer a tree. The main visual system is the river stage.
+
+## Visual Feeling
 
 The product should feel like:
 
 ```text
-quiet garden
-soft growth
-visible traces
+quiet river
+soft natural traces
+visible but gentle records
 low-pressure return
+clear behavior design
 ```
 
 It should not feel like:
@@ -29,37 +41,57 @@ task manager
 ranking app
 admin system
 fitness challenge
+tree growth game
+plant watering game
 ```
 
 ## Core Visual Objects
 
 Use these objects consistently:
 
-| Visual Object | Meaning                       |
-| ------------- | ----------------------------- |
-| Seed          | New habit possibility         |
-| Soil          | Starting point                |
-| Tree          | Whole habit system            |
-| Branch        | One habit                     |
-| Leaf          | One daily trace               |
-| Pale leaf     | Entry action completed        |
-| Green leaf    | Real action completed         |
-| Yellow leaf   | Missed day, history preserved |
-| Bud           | Downgraded action             |
-| Ring          | Long-term accumulated trace   |
-| Glow          | Anonymous companionship       |
-| Curve         | Creation process              |
+| Visual object | Meaning |
+| --- | --- |
+| Fixed river background | Atmosphere and stage only |
+| Left floating habit list | Habit selector |
+| Motto floating panel | No habit selected |
+| Lotus | Completed real action |
+| Dark green small leaf | Entry action |
+| Light green small leaf | Downgraded action |
+| Small stone | Did not happen |
+| Faint ripple | Not recorded |
+| Soft heatmap cell | Pattern observation |
+| Curve | Creation process |
+
+The river background must not encode data. Real records are represented by overlay objects.
+
+## Deprecated Visual Objects
+
+Do not use these as the home main visual:
+
+* habit tree
+* trunk
+* branch
+* tree rings
+* stitched branch SVGs
+* tree renderer
+* `tree-layout-registry`
+* watering plant
+* Three.js plant scene
+
+Old assets or old file names may exist, but they should not guide new UI work.
 
 ## Color Direction
 
 Use:
 
 * warm off-white
+* soft river blue-green
 * sage green
 * moss green
-* soft wood brown
-* pale yellow
+* lotus pink
+* pale stone gray
 * low-saturation blue-gray
+* translucent white ripples
 
 Avoid:
 
@@ -69,22 +101,24 @@ Avoid:
 * bright orange warning
 * corporate dashboard blue
 * high-contrast gamification palette
+* dominant purple gradients
 
 ## Recommended CSS Variables
 
 ```css
 :root {
-  --color-bg: #f7f3ea;
+  --color-bg: #f4f0e7;
   --color-surface: #fffdf7;
   --color-surface-soft: #f0eadf;
-  --color-primary: #6f8f72;
-  --color-primary-dark: #3f5f46;
-  --color-primary-light: #dce8d5;
-  --color-wood: #a9825a;
-  --color-leaf: #7fa86b;
-  --color-leaf-pale: #bed4a9;
-  --color-yellow-leaf: #d7b56d;
-  --color-glow: #f4df9b;
+  --color-river: #8fb7b6;
+  --color-river-deep: #5f8f8e;
+  --color-primary: #5f7f63;
+  --color-primary-dark: #344f3b;
+  --color-lotus: #f1c9c7;
+  --color-leaf-dark: #4f7d54;
+  --color-leaf-light: #a8c795;
+  --color-stone: #b9b2a4;
+  --color-ripple: rgba(255, 255, 255, 0.55);
   --color-text: #263328;
   --color-text-soft: #687466;
   --color-border: rgba(63, 95, 70, 0.16);
@@ -96,13 +130,13 @@ Avoid:
 
 Do:
 
-* Use one main visual per page.
+* Use one main visual stage per page.
 * Keep enough whitespace.
-* Use rounded cards.
-* Use organic curves.
-* Keep visual focus clear.
-* Use soft shadows.
-* Use subtle depth.
+* Use floating panels with restrained shadows.
+* Keep the river stage visible behind panels.
+* Make overlays stable and deterministic.
+* Use soft depth and clear selection states.
+* Keep the top navigation light.
 
 Do not:
 
@@ -111,42 +145,57 @@ Do not:
 * place too many metrics at the top
 * make navigation dominate the screen
 * use strong grid-heavy dashboard layout
+* hide the river behind cards
 
-## Tree Rules
+## River Stage Rules
 
-The tree should:
+The river stage should:
 
-* be central on the home page
-* show branches as habits
-* show leaves as records
-* support hover and click
-* look organic but not childish
-* preserve yellow leaves
+* use a fixed background
+* support overlay markers
+* use fixed percentage points for daily markers
+* show a motto panel when no habit is selected
+* show monthly markers when a habit is selected
+* keep markers readable at desktop and mobile sizes
 
-The tree should not:
+The river stage should not:
 
-* show failure count as main element
-* show streak as the main element
-* look like a performance chart
+* change the background based on status
+* show multiple stacked rivers for multiple habits
+* encode progress inside the background image
+* use tree branches as layout paths
+
+## Detail Visual Rules
+
+The detail page should:
+
+* use the same river background as home
+* show one selected habit
+* show month and week controls
+* show at most 7 day objects for a selected week
+* include a right collapsible drawer
+* show a soft heatmap that feels organic
+
+The heatmap should not look like an engineering statistics panel.
 
 ## Curve Rules
 
 The creation curve should:
 
-* grow gradually
 * reveal nodes step by step
 * let users go back
 * visually indicate progress
 * feel like a path, not a form wizard
+* save the final habit into the river system
 
 ## Icon and SVG Style
 
-SVGs should be:
+SVGs or CSS objects should be:
 
 * simple
 * soft
 * slightly organic
-* line-based or flat-filled
+* symbolic
 * consistent in stroke width
 
 Avoid:
@@ -155,6 +204,4 @@ Avoid:
 * stock icon feel
 * childish stickers
 * hyper-realistic assets
-
----
-
+* realistic tree assembly

@@ -1,10 +1,7 @@
-# .claude/skills/fogg-habit-ux-skill/SKILL.md
-
 ---
-
 name: fogg-habit-ux-skill
-description: Use this skill when designing product flow, page structure, habit creation, habit recording, failure diagnosis, no-shame return, or any feature related to the Fogg Behavior Model.
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+description: Use this skill when designing product flow, page structure, habit creation, habit recording, missed-day diagnosis, no-shame return, river-stage habit records, or any feature related to the Fogg Behavior Model in the Habit Garden prototype.
+---
 
 # Fogg Habit UX Skill
 
@@ -13,6 +10,8 @@ description: Use this skill when designing product flow, page structure, habit c
 Use this skill to keep the product aligned with the Fogg Behavior Model.
 
 The product is not a check-in app. It is a behavior design assistant.
+
+The current visual system is the River Stage Habit System. Habit records should be shown as river objects, not as tree growth.
 
 ## Core Model
 
@@ -32,7 +31,7 @@ In this prototype, translate it as:
 
 Do not force users to understand theory. Let the interface embody the theory.
 
-## Required Flow
+## Required Creation Flow
 
 The creation flow must include:
 
@@ -43,6 +42,8 @@ The creation flow must include:
 5. Micro-habit
 6. Natural prompt
 7. Three-day trial
+
+The final habit should be saved into the river system.
 
 ## Motivation Design
 
@@ -77,7 +78,7 @@ Ability should be supported through:
 * downgrade mode
 * low-energy mode
 
-Micro-habit is not always “the smallest possible action”.
+Micro-habit is not always the smallest possible action.
 
 It should be:
 
@@ -87,12 +88,12 @@ It should be:
 
 Examples:
 
-| Habit Type | Better Micro-habit             |
-| ---------- | ------------------------------ |
-| Reading    | Read one page                  |
-| Exercise   | Change shoes and go downstairs |
-| Writing    | Open document and write title  |
-| Study      | Sit at desk and open notes     |
+| Habit type | Better micro-habit |
+| --- | --- |
+| Reading | Read one page |
+| Exercise | Change shoes and go downstairs |
+| Writing | Open document and write title |
+| Study | Sit at desk and open notes |
 
 ## Prompt Design
 
@@ -115,9 +116,35 @@ Preferred anchors:
 
 Avoid default high-frequency push reminders.
 
-## Failure Diagnosis
+## Daily Record Design
 
-When the user misses a habit, do not treat it as failure.
+Use four daily states:
+
+| User label | Stored status | River object |
+| --- | --- | --- |
+| 完成 | `real` | 莲花 |
+| 入场 | `entry` | 深绿色小叶片 |
+| 降级 | `downgrade` | 浅绿色小叶片 |
+| 未发生 | `missed` | 小石头 |
+
+No record should appear as a faint placeholder ripple.
+
+Record fields:
+
+```js
+{
+  date,
+  status,
+  note,
+  reason
+}
+```
+
+`note` and `reason` are optional.
+
+## Missed-Day Diagnosis
+
+When the user marks `未发生`, do not treat it as failure.
 
 Ask:
 
@@ -144,6 +171,8 @@ Then suggest:
 * pause one day
 * use entry action only
 
+The visual result should be a small stone, not a warning.
+
 ## No-Shame Return
 
 For returning users, show:
@@ -164,9 +193,10 @@ Do not show:
 * Make behavior easier to happen.
 * Keep history even after interruption.
 * Let users adjust plans.
-* Use yellow leaves for missed days.
-* Make recovery one-click.
+* Use river objects for daily records.
+* Make recovery one-click or very lightweight.
 * Keep the main journey low-pressure.
+* Preserve the fixed river background as atmosphere only.
 
 ## Do Not
 
@@ -177,5 +207,4 @@ Do not show:
 * Force public sharing.
 * Use shame-based reminders.
 * Make the user fill long forms.
-
----
+* Return to habit tree, branch, trunk, or watering-plant metaphors.

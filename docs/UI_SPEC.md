@@ -5,10 +5,10 @@
 The UI should be built around:
 
 ```text
-Habit Garden
+River Stage Habit System
 Behavior Design Curve
-Habit Tree
 Quiet Records
+Soft Reflection
 ```
 
 The product should feel calm, organic, and lightweight.
@@ -21,62 +21,83 @@ It should not look like:
 * KPI tracker
 * calendar-only check-in app
 * competition product
+* tree growth game
+* plant watering simulation
 
-## 2. Page List
+---
+
+## 2. Deprecated UI Direction
+
+Do not use the following as the primary home visual:
+
+* habit tree
+* trunk and branch composition
+* branch growth
+* tree rings
+* stitched branch SVGs
+* `tree-layout-registry` visual calibration
+* Three.js plant scene
+
+Existing class names may still contain `garden`, but visual implementation should follow the river specs.
+
+---
+
+## 3. Page List
 
 Required pages:
 
-1. `index.html` — Habit Garden Home
-2. `create.html` — Behavior Design Curve
-3. `detail.html` — Habit Branch Detail
-4. `review.html` — Growth Review
-5. `explore.html` — Optional Exploration
+1. `index.html` - River Stage Home
+2. `create.html` - Behavior Design Curve
+3. `detail.html` - River Habit Detail
+4. `review.html` - Growth Review
+5. `explore.html` - Optional Exploration
 
-## 3. Shared Layout
+---
+
+## 4. Shared Layout
 
 Each page should include:
 
 * soft background
 * simple top navigation
 * clear page identity
-* one primary visual object
+* one primary visual system
 * short guiding copy
-* rounded cards
+* rounded floating panels
 * gentle hover states
 
-The top navigation should be minimal:
+The top navigation must include:
 
 ```text
 花园
 设计
 复盘
 探索
+今日记录
 ```
 
-The navigation should not dominate. The main navigation should come from visual objects:
+`今日记录` should open a fixed-height floating panel on the home page. It should not dominate the layout.
 
-* branches
-* leaves
-* curve nodes
-* cards
+---
 
-## 4. Color System
+## 5. Color System
 
 Recommended CSS variables:
 
 ```css
 :root {
-  --color-bg: #f7f3ea;
+  --color-bg: #f4f0e7;
   --color-surface: #fffdf7;
   --color-surface-soft: #f0eadf;
-  --color-primary: #6f8f72;
-  --color-primary-dark: #3f5f46;
-  --color-primary-light: #dce8d5;
-  --color-wood: #a9825a;
-  --color-leaf: #7fa86b;
-  --color-leaf-pale: #bed4a9;
-  --color-yellow-leaf: #d7b56d;
-  --color-glow: #f4df9b;
+  --color-river: #8fb7b6;
+  --color-river-deep: #5f8f8e;
+  --color-primary: #5f7f63;
+  --color-primary-dark: #344f3b;
+  --color-lotus: #f1c9c7;
+  --color-leaf-dark: #4f7d54;
+  --color-leaf-light: #a8c795;
+  --color-stone: #b9b2a4;
+  --color-ripple: rgba(255, 255, 255, 0.55);
   --color-text: #263328;
   --color-text-soft: #687466;
   --color-border: rgba(63, 95, 70, 0.16);
@@ -92,9 +113,12 @@ pure black
 neon green
 high-saturation blue
 strong purple gradients
+competitive gamification colors
 ```
 
-## 5. Typography
+---
+
+## 6. Typography
 
 Use system fonts.
 
@@ -112,86 +136,128 @@ font-family:
 
 Text hierarchy:
 
-| Element       | Style                  |
-| ------------- | ---------------------- |
-| Page title    | 28-40px, medium weight |
+| Element | Style |
+| --- | --- |
+| Page title | 28-40px, medium weight |
 | Main question | 24-32px, medium weight |
-| Card title    | 16-20px                |
-| Helper text   | 13-15px                |
-| Button text   | 14-16px                |
+| Floating panel title | 16-20px |
+| Helper text | 13-15px |
+| Button text | 14-16px |
 
 Avoid large blocks of body text.
 
-## 6. `index.html` UI
+---
 
-### 6.1 Empty State
+## 7. `index.html` UI
+
+### 7.1 Base Layout
+
+The home page should use a full-stage composition:
+
+* top: navigation
+* left: floating habit list
+* center/background: fixed river image
+* over river: motto panel or record objects
+* top/right or nav anchored: today record popover
+
+The fixed river background must:
+
+* fill the main stage
+* remain visually stable between states
+* provide atmosphere only
+* not contain real data
+* not change shape based on records
+
+### 7.2 Left Floating Habit List
+
+The habit list should contain:
+
+* habit name or wish
+* short micro-habit label
+* small current-month summary
+* selected state
+* create-new entry
+
+The list should be visually light. It should not become a table.
+
+Additional rail behavior:
+
+* show the list as a light vertical rail
+* keep habit text centered near the rail without intersecting the line
+* use a bounded list area
+* if there are many habits, auto-scroll by pointer position rather than showing a heavy scrollbar
+* place a plus/add control below the rail
+* plus/add opens `create.html`
+
+### 7.3 No Habit Selected
+
+When no habit is selected:
+
+* show the river background
+* show the left habit list
+* show one core motto floating panel over the stage
+* hide monthly record objects
+
+Suggested motto:
+
+```text
+把今天发生的，轻轻放在河面上。
+```
+
+The motto panel can include one secondary line and one action button, but should stay compact.
+
+### 7.4 Habit Selected
+
+When a habit is selected:
+
+* hide the motto panel
+* show current month label
+* place daily objects on fixed river points
+* show object tooltip on hover/focus
+* allow clicking an object to show single-day detail or navigate to detail view
+
+Status visual mapping:
+
+| Status | Visual |
+| --- | --- |
+| `real` | Lotus |
+| `entry` | Dark green small leaf |
+| `downgrade` | Light green small leaf |
+| `missed` | Small stone |
+| no record | Faint placeholder ripple |
+
+### 7.5 Today Record Popover
+
+The today record popover should:
+
+* open from `今日记录`
+* use fixed height
+* float above the river stage
+* show today's habits needing records
+* allow status selection per habit
+* allow optional reason/note
+* close without forcing completion
+
+Status choices:
+
+```text
+完成
+入场
+降级
+未发生
+```
+
+---
+
+## 8. `create.html` UI
+
+The page should remain a behavior design canvas.
 
 Layout:
 
-* Centered seed/soil visual.
-* One headline.
-* Three state chips.
-* One primary button.
-* Optional small theory link.
-
-Suggested copy:
-
-```text
-先种下一个容易发生的行为。
-```
-
-State chips:
-
-```text
-我很有动力
-我有点累，但想开始
-我只是看看
-```
-
-Primary button:
-
-```text
-生成一个微习惯方案
-```
-
-Visual:
-
-* seed in soil
-* subtle glow
-* small empty branch silhouette
-* soft floating particles
-
-### 6.2 Existing Habit State
-
-Layout:
-
-* Top left: simple greeting
-* Center: habit tree
-* Right side: today card
-* Bottom/right: anonymous glow card
-
-Today card:
-
-```text
-今天只做第一步也可以。
-```
-
-Tree:
-
-* each branch is clickable
-* leaves are hoverable
-* yellow leaves are not visually alarming
-* branch growth should look organic
-
-## 7. `create.html` UI
-
-The page should be a design canvas.
-
-Layout:
-
-* Left or top: behavior design curve
-* Center: current step card
-* Right: live plan preview
+* left or top: behavior design curve
+* center: current step card
+* right: live plan preview
 
 Curve nodes:
 
@@ -204,50 +270,80 @@ Curve nodes:
 提示
 ```
 
-Step card should include:
-
-* one main question
-* short choices
-* one primary action
-* one secondary back action
-
-Live plan preview should gradually fill:
+Final save copy should use river language:
 
 ```text
-愿望：
-黄金行为：
-入场动作：
-自然提示：
+放到河流里
 ```
 
 Do not show a long form.
 
-## 8. `detail.html` UI
+---
 
-Layout:
+## 9. `detail.html` UI
 
-* Left: branch summary
-* Center: leaf timeline
-* Right: today record card or adjustment card
+### 9.1 Base Layout
 
-Main sections:
+The detail page should use:
+
+* same river background as home
+* current habit identity at top/left
+* week-focused river object overlay
+* right collapsible floating panel
+
+It should show one habit, one selected month, and one selected week.
+
+### 9.2 River Detail Stage
+
+The detail stage should:
+
+* use larger spacing than home
+* show only the selected week's objects by default
+* allow month/week switching with small controls
+* keep all objects on fixed points
+* avoid chart-like grid dominance
+
+### 9.3 Right Collapsible Panel
+
+Modules:
 
 1. Current plan
-2. Today action
-3. Leaf timeline
-4. Plan health
-5. Adjustment history
+2. Execution heatmap
+3. Single-day detail
 
-Status visual:
+Collapsed state:
 
-| Status                 | Visual      |
-| ---------------------- | ----------- |
-| real action completed  | green leaf  |
-| entry action completed | pale leaf   |
-| downgraded             | small bud   |
-| missed                 | yellow leaf |
+* narrow vertical tab or icon button
+* keeps river stage visible
+* arrow points right
 
-## 9. `review.html` UI
+Expanded state:
+
+* fixed width
+* scroll internally if needed
+* does not cover the top navigation
+* arrow points left
+* current plan and heatmap modules should remain visually balanced in height
+
+### 9.4 Heatmap Style
+
+The heatmap may reference GitHub contributions in structure:
+
+* small day cells
+* weeks grouped horizontally or softly wrapped
+* color intensity indicates record type or presence
+
+But it must not look like an engineering statistics panel:
+
+* use rounded small cells
+* use soft natural colors
+* avoid harsh axes
+* avoid dense labels
+* avoid performance language
+
+---
+
+## 10. `review.html` UI
 
 The review page should be quiet and insight-oriented.
 
@@ -267,12 +363,14 @@ MAP cards:
 
 Avoid complicated data dashboards.
 
-## 10. `explore.html` UI
+---
+
+## 11. `explore.html` UI
 
 Layout:
 
 * inspiration cards
-* micro-glow wall
+* gentle trace wall
 * optional same-goal room preview
 
 The page should feel optional and relaxed.
@@ -284,24 +382,28 @@ Do not show:
 * progress comparison
 * performance competition
 
-## 11. Responsive Design
+---
+
+## 12. Responsive Design
 
 Desktop:
 
-* use two or three columns
-* keep tree or curve as center visual
+* use river stage as the primary center area
+* keep habit list on the left
+* keep right panel collapsible on detail page
 
 Mobile:
 
-* stack sections vertically
-* keep one main action visible
-* convert large focus map into simpler card ranking if needed
+* stack top navigation and habit list carefully
+* river stage remains visible
+* habit list can become a horizontal selector
+* today record popover becomes bottom sheet style
+* right detail panel becomes bottom drawer
 
 Minimum requirement:
 
 * page should not break on narrow screens
 * buttons should remain tappable
 * text should not overflow
-* tree/curve should scale or scroll gracefully
-
----
+* river objects should remain selectable
+* floating panels should not cover each other incoherently
