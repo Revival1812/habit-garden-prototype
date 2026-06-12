@@ -52,7 +52,7 @@
         { "id": "study_07", "category": "chain-existing", "title": "打开台灯后先看一眼提纲", "description": "把学习挂在台灯之后。", "microType": "scene-transition" }
       ],
       "starter_versions": [
-        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "先 5 分钟", "entryAction": "先学 5 分钟", "realAction": "学习 5 分钟" },
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "先 5 分钟", "entryAction": "打开学习资料", "realAction": "学 5 分钟" },
         { "type": "scene-transition", "label": "场景切换型", "badge": "先到书桌", "entryAction": "先走到书桌前", "realAction": "坐下后看一眼资料" },
         { "type": "preparation-action", "label": "准备动作型", "badge": "先翻开", "entryAction": "先把书翻开", "realAction": "看完当前这一页" },
         { "type": "task-splitting", "label": "任务拆分型", "badge": "只看一页", "entryAction": "先只看一页", "realAction": "读完这一页再停下" },
@@ -82,7 +82,7 @@
         { "id": "exercise_07", "category": "chain-existing", "title": "打开运动视频后站起来", "description": "先站起来，不急着做完整。", "microType": "scene-transition" }
       ],
       "starter_versions": [
-        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "2 分钟", "entryAction": "先动 2 分钟", "realAction": "活动身体 2 分钟" },
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "2 分钟", "entryAction": "换上运动服", "realAction": "活动身体 2 分钟" },
         { "type": "scene-transition", "label": "场景切换型", "badge": "到门口", "entryAction": "先走到门口", "realAction": "到门口后走几步" },
         { "type": "preparation-action", "label": "准备动作型", "badge": "先换鞋", "entryAction": "先穿上运动鞋", "realAction": "穿好后站起来活动一下" },
         { "type": "micro-action", "label": "微动作型", "badge": "一个拉伸", "entryAction": "先做一次拉伸", "realAction": "做完后再走几步" },
@@ -112,12 +112,12 @@
         { "id": "read_07", "category": "chain-existing", "title": "打开台灯后坐下", "description": "挂在台灯之后。", "microType": "scene-transition" }
       ],
       "starter_versions": [
-        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "1 页", "entryAction": "先读 1 页", "realAction": "读完 1 页" },
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "1 页", "entryAction": "把书翻开", "realAction": "读 1 页" },
         { "type": "scene-transition", "label": "场景切换型", "badge": "到位置", "entryAction": "先坐到阅读的位置", "realAction": "坐下后拿起书" },
         { "type": "preparation-action", "label": "准备动作型", "badge": "拿出来", "entryAction": "先把书拿出来", "realAction": "翻开今天要看的地方" },
         { "type": "micro-action", "label": "微动作型", "badge": "翻一页", "entryAction": "先翻开今天要看的那一页", "realAction": "读第一段" },
         { "type": "entry-only", "label": "入场型", "badge": "在眼前", "entryAction": "先把书放在眼前", "realAction": "看一眼标题" },
-        { "type": "light-start", "label": "轻启动型", "badge": "一句", "entryAction": "先读一句", "realAction": "读完这一句" }
+        { "type": "light-start", "label": "轻启动型", "badge": "一句", "entryAction": "把书放到眼前", "realAction": "读第一句" }
       ]
     },
     "diet": {
@@ -172,7 +172,7 @@
         { "id": "notes_07", "category": "chain-existing", "title": "打开台灯后坐下写一句", "description": "把记录挂在台灯之后。", "microType": "scene-transition" }
       ],
       "starter_versions": [
-        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "1 句话", "entryAction": "先记 1 句话", "realAction": "写下今天的一句话" },
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "1 句话", "entryAction": "打开笔记页", "realAction": "写下今天的一句话" },
         { "type": "scene-transition", "label": "场景切换型", "badge": "到书桌", "entryAction": "先坐到书桌前", "realAction": "坐下后打开笔记" },
         { "type": "preparation-action", "label": "准备动作型", "badge": "打开页", "entryAction": "先打开笔记页", "realAction": "打开后写一行" },
         { "type": "micro-action", "label": "微动作型", "badge": "关键词", "entryAction": "先写下一个关键词", "realAction": "围绕关键词补一句" },

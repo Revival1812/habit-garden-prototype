@@ -1,68 +1,58 @@
 {
   "categories": [
-    { "key": "reduce-friction", "label": "降低阻力", "hint": "让行为更少步骤、更轻量" },
-    { "key": "change-environment", "label": "改变环境", "hint": "调整周围，让行为更容易发生" },
-    { "key": "chain-existing", "label": "绑定已有动作", "hint": "挂在已经稳定发生的事后面" },
-    { "key": "preparation-action", "label": "准备动作", "hint": "先把入口准备好" },
-    { "key": "entry-only", "label": "只做入场动作", "hint": "只完成第一步也可以" },
-    { "key": "scene-transition", "label": "场景切换", "hint": "先到会发生的位置" },
-    { "key": "micro-action", "label": "微动作", "hint": "从一个很小的动作开始" }
+    { "key": "reduce-friction", "label": "降低阻力", "hint": "让下一步更轻一点。" },
+    { "key": "change-environment", "label": "改变环境", "hint": "让周围先帮你一点。" },
+    { "key": "chain-existing", "label": "绑定已有动作", "hint": "挂在自然会发生的事后面。" },
+    { "key": "entry-only", "label": "只做入场动作", "hint": "先让第一步出现。" }
   ],
-  "cards": [
-    { "id": "sleep_01", "templateId": "sleep_early", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "先让晚上慢下来一点。", "microType": "scene-transition" },
-    { "id": "sleep_02", "templateId": "sleep_early", "category": "change-environment", "title": "回到宿舍后打开台灯", "description": "用轻一点的光提示收尾。", "microType": "preparation-action" },
-    { "id": "sleep_03", "templateId": "sleep_early", "category": "reduce-friction", "title": "洗漱后把手机放远一点", "description": "减少继续刷的机会。", "microType": "preparation-action" },
-    { "id": "sleep_04", "templateId": "sleep_early", "category": "change-environment", "title": "插上充电器后关掉大灯", "description": "让环境先进入晚上。", "microType": "scene-transition" },
-    { "id": "sleep_05", "templateId": "sleep_early", "category": "entry-only", "title": "先躺到床上不刷别的内容", "description": "先到床上，不要求立刻睡着。", "microType": "entry-only" },
-    { "id": "sleep_06", "templateId": "sleep_early", "category": "entry-only", "title": "只做入场动作：打开台灯", "description": "先留一个很轻的开始。", "microType": "preparation-action" },
-    { "id": "sleep_07", "templateId": "sleep_early", "category": "scene-transition", "title": "穿上睡衣就先进入准备状态", "description": "让身体知道今天要收尾了。", "microType": "scene-transition" },
-
-    { "id": "study_01", "templateId": "study", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "先坐过去，不急着做很多。", "microType": "scene-transition" },
-    { "id": "study_02", "templateId": "study", "category": "preparation-action", "title": "打开电脑后先打开资料", "description": "让资料先出现在眼前。", "microType": "preparation-action" },
-    { "id": "study_03", "templateId": "study", "category": "scene-transition", "title": "回到宿舍后先坐下", "description": "先回到会发生的位置。", "microType": "scene-transition" },
-    { "id": "study_04", "templateId": "study", "category": "preparation-action", "title": "拿出书后先翻到那一页", "description": "减少寻找和犹豫。", "microType": "preparation-action" },
-    { "id": "study_05", "templateId": "study", "category": "reduce-friction", "title": "只读一页", "description": "先用很小的一页开始。", "microType": "quantity-reduction" },
-    { "id": "study_06", "templateId": "study", "category": "entry-only", "title": "只做入场动作：打开文档", "description": "打开就算入场。", "microType": "entry-only" },
-    { "id": "study_07", "templateId": "study", "category": "chain-existing", "title": "打开台灯后先看一眼提纲", "description": "把学习挂在台灯之后。", "microType": "scene-transition" },
-
-    { "id": "exercise_01", "templateId": "exercise", "category": "scene-transition", "title": "回到宿舍后先换鞋", "description": "先让身体进入现场。", "microType": "preparation-action" },
-    { "id": "exercise_02", "templateId": "exercise", "category": "chain-existing", "title": "早上起床后先站起来活动一下", "description": "挂在起床之后。", "microType": "scene-transition" },
-    { "id": "exercise_03", "templateId": "exercise", "category": "scene-transition", "title": "晚饭后先走到楼下", "description": "先走到门口附近。", "microType": "scene-transition" },
-    { "id": "exercise_04", "templateId": "exercise", "category": "preparation-action", "title": "穿上运动鞋", "description": "只换鞋也算开始靠近。", "microType": "preparation-action" },
-    { "id": "exercise_05", "templateId": "exercise", "category": "reduce-friction", "title": "先做一个拉伸动作", "description": "用一个动作让身体醒过来。", "microType": "micro-action" },
-    { "id": "exercise_06", "templateId": "exercise", "category": "entry-only", "title": "只做入场动作：换上运动服", "description": "先进入运动状态。", "microType": "entry-only" },
-    { "id": "exercise_07", "templateId": "exercise", "category": "chain-existing", "title": "打开运动视频后站起来", "description": "先站起来，不急着做完整。", "microType": "scene-transition" },
-
-    { "id": "read_01", "templateId": "read", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "让阅读有一个安静的位置。", "microType": "scene-transition" },
-    { "id": "read_02", "templateId": "read", "category": "change-environment", "title": "回到宿舍后打开台灯", "description": "用台灯把注意力收回来。", "microType": "scene-transition" },
-    { "id": "read_03", "templateId": "read", "category": "preparation-action", "title": "把书放在枕边", "description": "让书先出现在手边。", "microType": "preparation-action" },
-    { "id": "read_04", "templateId": "read", "category": "reduce-friction", "title": "拿起书后翻开一页", "description": "先打开，不急着读多。", "microType": "micro-action" },
-    { "id": "read_05", "templateId": "read", "category": "reduce-friction", "title": "只读一页", "description": "用一页保留入口。", "microType": "quantity-reduction" },
-    { "id": "read_06", "templateId": "read", "category": "entry-only", "title": "只做入场动作：把书放到手边", "description": "让阅读更容易被看见。", "microType": "entry-only" },
-    { "id": "read_07", "templateId": "read", "category": "chain-existing", "title": "打开台灯后坐下", "description": "挂在台灯之后。", "microType": "scene-transition" },
-
-    { "id": "diet_01", "templateId": "diet", "category": "chain-existing", "title": "吃饭前先喝几口水", "description": "把入口放在饭前。", "microType": "micro-action" },
-    { "id": "diet_02", "templateId": "diet", "category": "reduce-friction", "title": "晚饭后先不拿零食", "description": "先留出一个停顿。", "microType": "entry-only" },
-    { "id": "diet_03", "templateId": "diet", "category": "change-environment", "title": "回到宿舍后先把零食收起来", "description": "让环境更容易开始。", "microType": "environment-adjustment" },
-    { "id": "diet_04", "templateId": "diet", "category": "change-environment", "title": "先把水果放到看得见的地方", "description": "把更轻的选择放近一点。", "microType": "preparation-action" },
-    { "id": "diet_05", "templateId": "diet", "category": "entry-only", "title": "只做入场动作：把水杯放在桌上", "description": "先让水杯出现。", "microType": "entry-only" },
-    { "id": "diet_06", "templateId": "diet", "category": "chain-existing", "title": "打开冰箱时先看健康选项", "description": "先看一眼再决定。", "microType": "scene-transition" },
-    { "id": "diet_07", "templateId": "diet", "category": "scene-transition", "title": "晚饭后先坐到书桌前而不是找零食", "description": "换一个更容易停下的位置。", "microType": "scene-transition" },
-
-    { "id": "notes_01", "templateId": "notes", "category": "preparation-action", "title": "打开电脑后翻开笔记", "description": "先把笔记放到眼前。", "microType": "preparation-action" },
-    { "id": "notes_02", "templateId": "notes", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "在安静一点的时候写一句。", "microType": "scene-transition" },
-    { "id": "notes_03", "templateId": "notes", "category": "reduce-friction", "title": "打开笔记软件后写一行", "description": "一行就够开始。", "microType": "quantity-reduction" },
-    { "id": "notes_04", "templateId": "notes", "category": "scene-transition", "title": "回到宿舍后先翻开本子", "description": "先到记录会发生的位置。", "microType": "preparation-action" },
-    { "id": "notes_05", "templateId": "notes", "category": "entry-only", "title": "只做入场动作：打开笔记页", "description": "打开就是入场。", "microType": "entry-only" },
-    { "id": "notes_06", "templateId": "notes", "category": "micro-action", "title": "想到一件事时先记一个词", "description": "先接住一个关键词。", "microType": "micro-action" },
-    { "id": "notes_07", "templateId": "notes", "category": "chain-existing", "title": "打开台灯后坐下写一句", "description": "把记录挂在台灯之后。", "microType": "scene-transition" },
-
-    { "id": "custom_01", "templateId": "custom", "category": "preparation-action", "title": "把要做的东西放到眼前", "description": "先让它被看见。", "microType": "preparation-action" },
-    { "id": "custom_02", "templateId": "custom", "category": "scene-transition", "title": "先坐到会发生的位置", "description": "先到现场。", "microType": "scene-transition" },
-    { "id": "custom_03", "templateId": "custom", "category": "entry-only", "title": "先做一个入场动作", "description": "只做开头也可以。", "microType": "entry-only" },
-    { "id": "custom_04", "templateId": "custom", "category": "chain-existing", "title": "绑在一个已经会发生的动作后面", "description": "让它跟着已有节奏出现。", "microType": "scene-transition" },
-    { "id": "custom_05", "templateId": "custom", "category": "reduce-friction", "title": "只做最小的一步", "description": "先保留一个很小的入口。", "microType": "quantity-reduction" },
-    { "id": "custom_06", "templateId": "custom", "category": "change-environment", "title": "先把环境整理到更容易开始", "description": "让下一步更近一点。", "microType": "environment-adjustment" },
-    { "id": "custom_07", "templateId": "custom", "category": "preparation-action", "title": "先打开那个页面 / 工具 / 物品", "description": "打开就算靠近了。", "microType": "preparation-action" }
-  ]
+  "cards": {
+    "reduce-friction": [
+      { "id": "rf01", "title": "把书放在枕边", "description": "伸手就能拿到。", "entryAction": "把书放到枕边", "realAction": "读一页", "naturalPrompt": "上床后" },
+      { "id": "rf02", "title": "只读一页", "description": "先翻开就好。", "entryAction": "把书翻开", "realAction": "读一页", "naturalPrompt": "晚饭后坐到书桌前" },
+      { "id": "rf03", "title": "先写一句", "description": "不要求完整。", "entryAction": "打开笔记页", "realAction": "写一句话", "naturalPrompt": "打开电脑后" },
+      { "id": "rf04", "title": "先学 5 分钟", "description": "把开始变短一点。", "entryAction": "打开学习资料", "realAction": "学 5 分钟", "naturalPrompt": "回到宿舍后" },
+      { "id": "rf05", "title": "先提前 10 分钟上床", "description": "不要求立刻睡着。", "entryAction": "躺到床上", "realAction": "提前 10 分钟躺下", "naturalPrompt": "洗漱后" },
+      { "id": "rf06", "title": "先做一次拉伸", "description": "让身体先动一下。", "entryAction": "站起来", "realAction": "做一次拉伸", "naturalPrompt": "起床后" },
+      { "id": "rf07", "title": "只打开文档", "description": "先进入现场。", "entryAction": "打开文档", "realAction": "写一行标题", "naturalPrompt": "打开电脑后" },
+      { "id": "rf08", "title": "先喝一口水", "description": "从一个小动作开始。", "entryAction": "拿起水杯", "realAction": "喝一口水", "naturalPrompt": "坐到书桌前后" },
+      { "id": "rf09", "title": "先记一个关键词", "description": "把想法接住一点。", "entryAction": "打开笔记软件", "realAction": "写一个词", "naturalPrompt": "想到一件事时" },
+      { "id": "rf10", "title": "先走到门口", "description": "不急着完成全部。", "entryAction": "站起来走到门口", "realAction": "走到门口", "naturalPrompt": "晚饭后" }
+    ],
+    "change-environment": [
+      { "id": "ce01", "title": "把零食收远一点", "description": "看不见时更轻松。", "entryAction": "把零食收进柜子", "realAction": "不吃多余零食", "naturalPrompt": "回到宿舍后" },
+      { "id": "ce02", "title": "提前放好运动鞋", "description": "让出门近一点。", "entryAction": "把鞋放到门口", "realAction": "出门运动", "naturalPrompt": "回家后" },
+      { "id": "ce03", "title": "把水杯放到桌上", "description": "一抬眼就看到。", "entryAction": "把水杯放在桌面上", "realAction": "喝几口水", "naturalPrompt": "坐到书桌前后" },
+      { "id": "ce04", "title": "把书放到书桌正中间", "description": "让开始更容易。", "entryAction": "把书放在桌前", "realAction": "翻开书", "naturalPrompt": "晚饭后" },
+      { "id": "ce05", "title": "睡前把手机放远一点", "description": "少一点被带走。", "entryAction": "把手机放到远处", "realAction": "不看手机入睡", "naturalPrompt": "上床前" },
+      { "id": "ce06", "title": "把笔记本摊开", "description": "给自己留一个入口。", "entryAction": "把本子摊开", "realAction": "写一点东西", "naturalPrompt": "坐到书桌前后" },
+      { "id": "ce07", "title": "只留一盏台灯", "description": "让环境慢下来。", "entryAction": "关掉大灯开台灯", "realAction": "安静待一会儿", "naturalPrompt": "晚饭后" },
+      { "id": "ce08", "title": "把要用的资料提前打开", "description": "减少临场阻力。", "entryAction": "提前打开资料页", "realAction": "开始学习", "naturalPrompt": "打开电脑后" },
+      { "id": "ce09", "title": "清出一小块桌面", "description": "给行动留位置。", "entryAction": "收拾桌面一角", "realAction": "开始做一件事", "naturalPrompt": "回到宿舍后" },
+      { "id": "ce10", "title": "把运动服放在椅背上", "description": "让下一步更近。", "entryAction": "把运动服摆好", "realAction": "换上运动服", "naturalPrompt": "起床后" }
+    ],
+    "chain-existing": [
+      { "id": "ch01", "title": "刷牙后喝一杯水", "description": "接在已经稳定的动作后。", "entryAction": "喝一杯水", "realAction": "喝完水后开始今天的第一件事", "naturalPrompt": "刷牙后" },
+      { "id": "ch02", "title": "晚饭后坐到书桌前", "description": "先坐过去。", "entryAction": "走到书桌前坐下", "realAction": "学一会儿", "naturalPrompt": "晚饭后" },
+      { "id": "ch03", "title": "回到宿舍后打开台灯", "description": "让提示自然出现。", "entryAction": "打开台灯", "realAction": "坐下来开始学习", "naturalPrompt": "回到宿舍后" },
+      { "id": "ch04", "title": "插上充电器后放下手机", "description": "接在固定动作后。", "entryAction": "把手机放下", "realAction": "做别的", "naturalPrompt": "插上充电器后" },
+      { "id": "ch05", "title": "打开电脑后先看提纲", "description": "先看到任务。", "entryAction": "打开提纲", "realAction": "开始学习", "naturalPrompt": "打开电脑后" },
+      { "id": "ch06", "title": "洗漱后把书翻开", "description": "让阅读接上日常。", "entryAction": "翻开书", "realAction": "读一页", "naturalPrompt": "洗漱后" },
+      { "id": "ch07", "title": "上床前记录一句", "description": "给一天留下收尾。", "entryAction": "打开笔记", "realAction": "写一句", "naturalPrompt": "上床前" },
+      { "id": "ch08", "title": "拿起水杯后站起来活动", "description": "借一个动作带出另一个。", "entryAction": "站起来", "realAction": "活动一下", "naturalPrompt": "拿起水杯后" },
+      { "id": "ch09", "title": "关灯前整理明天要用的", "description": "让下一天轻一点。", "entryAction": "整理桌面", "realAction": "准备好明天物品", "naturalPrompt": "关灯前" },
+      { "id": "ch10", "title": "吃饭前先停一下", "description": "给选择留一点空间。", "entryAction": "停下来深呼吸", "realAction": "认真选择食物", "naturalPrompt": "吃饭前" }
+    ],
+    "entry-only": [
+      { "id": "eo01", "title": "打开台灯", "description": "只做这一步。", "entryAction": "打开台灯", "realAction": "坐下并开始第一步", "naturalPrompt": "回到宿舍后" },
+      { "id": "eo02", "title": "穿上运动鞋", "description": "先让身体到场。", "entryAction": "穿上运动鞋", "realAction": "走到门口", "naturalPrompt": "想出门运动时" },
+      { "id": "eo03", "title": "打开笔记页", "description": "不要求马上写很多。", "entryAction": "打开笔记页", "realAction": "写下第一行", "naturalPrompt": "打开电脑后" },
+      { "id": "eo04", "title": "把书放到眼前", "description": "先进入阅读现场。", "entryAction": "把书放到眼前", "realAction": "翻开读第一段", "naturalPrompt": "晚饭后" },
+      { "id": "eo05", "title": "打开学习文档", "description": "只让入口出现。", "entryAction": "打开学习文档", "realAction": "看一眼今天要学的内容", "naturalPrompt": "打开电脑后" },
+      { "id": "eo06", "title": "坐到书桌前", "description": "先到那个位置。", "entryAction": "走到书桌前坐下", "realAction": "打开今天要用的东西", "naturalPrompt": "晚饭后" },
+      { "id": "eo07", "title": "把水杯装满", "description": "先准备好。", "entryAction": "把水杯装满水", "realAction": "喝几口", "naturalPrompt": "起床后" },
+      { "id": "eo08", "title": "站起来", "description": "先从姿势开始。", "entryAction": "从椅子上站起来", "realAction": "活动一下身体", "naturalPrompt": "感觉久坐时" },
+      { "id": "eo09", "title": "翻开今天这一页", "description": "不要求立刻读完。", "entryAction": "翻开今天该读的那一页", "realAction": "读第一段", "naturalPrompt": "坐到书桌前后" },
+      { "id": "eo10", "title": "写下标题", "description": "先给任务开个头。", "entryAction": "写下标题", "realAction": "写第一段内容", "naturalPrompt": "打开文档后" }
+    ]
+  }
 }

@@ -120,6 +120,7 @@
     showCustomWishInput: false,
     wish: '',
     reason: '',
+    whyNowSource: 'template',
     candidates: [],
     goldenBehavior: '',
     microHabitType: '',
@@ -127,11 +128,14 @@
     realAction: '',
     prompt: '',
     promptSentence: '',
+    promptSource: 'template',
     promptStrength: '无打扰视觉提示',
     templateKey: DEFAULT_TEMPLATE_KEY,
     templateData: FALLBACK_TEMPLATE_DATA,
     mapPositions: {},
-    readyToSave: false
+    exploreSource: null,
+    readyToSave: false,
+    _prevRevealedSegments: 0
   };
 
   var refs = {};
@@ -146,6 +150,7 @@
     if (!refs.curveBoard || !refs.stepCard || !refs.planPreview) return;
 
     loadTemplateData().finally(function () {
+      loadExploreDraft();
       renderAll();
     });
   }
@@ -240,11 +245,15 @@
     var progressPath = document.createElementNS(svgNS, 'path');
     var progressRatio = Math.max(1, Math.min(state.revealedSegments, STEP_DEFS.length)) / STEP_DEFS.length;
     var targetOffset = Math.round(600 - (progressRatio * 600));
+    // Start from previous position so animation goes in the correct direction
+    var prevRatio = Math.max(0, Math.min(state._prevRevealedSegments || 0, STEP_DEFS.length)) / STEP_DEFS.length;
+    var startOffset = prevRatio > 0 ? Math.round(600 - (prevRatio * 600)) : 600;
+    state._prevRevealedSegments = state.revealedSegments;
     progressPath.setAttribute('class', 'curve-progress');
     progressPath.setAttribute('d', fullPath);
     progressPath.setAttribute('pathLength', '600');
-    // Set initial hidden state, then transition to target on next frame
-    progressPath.style.strokeDashoffset = '600';
+    // Set to previous position, then transition to target on next frame
+    progressPath.style.strokeDashoffset = String(startOffset);
     requestAnimationFrame(function () {
       progressPath.style.strokeDashoffset = String(targetOffset);
     });
@@ -319,6 +328,22 @@
     if (step.key === 'prompt') renderPromptStep(body);
 
     refs.stepCard.appendChild(head);
+
+    // Show explore source banner if coming from explore page
+    if (state.exploreSource) {
+      var banner = document.createElement('div');
+      banner.className = 'explore-source-banner';
+      var bannerLabel = document.createElement('span');
+      bannerLabel.className = 'explore-source-banner__label';
+      bannerLabel.textContent = '来自探索页';
+      var bannerText = document.createElement('span');
+      bannerText.className = 'explore-source-banner__text';
+      bannerText.textContent = state.exploreSource.category + ' · ' + state.exploreSource.title;
+      banner.appendChild(bannerLabel);
+      banner.appendChild(bannerText);
+      refs.stepCard.appendChild(banner);
+    }
+
     refs.stepCard.appendChild(body);
   }
 
@@ -395,10 +420,18 @@
     getReasonOptions().forEach(function (reason) {
       var button = document.createElement('button');
       button.type = 'button';
-      button.className = 'choice-pill' + (state.reason === reason ? ' is-selected' : '');
+      var isSelected = state.reason === reason && state.whyNowSource === 'template';
+      button.className = 'choice-pill' + (isSelected ? ' is-selected' : '');
       button.textContent = reason;
       button.addEventListener('click', function () {
-        state.reason = reason;
+        if (state.reason === reason && state.whyNowSource === 'template') {
+          // Toggle off — clicking the same selected pill deselects it
+          state.reason = '';
+          state.whyNowSource = 'template';
+        } else {
+          state.reason = reason;
+          state.whyNowSource = 'template';
+        }
         state.readyToSave = false;
         renderAll();
       });
@@ -406,6 +439,29 @@
     });
 
     container.appendChild(row);
+
+    // Custom reason input
+    var customWrap = document.createElement('div');
+    customWrap.className = 'inline-editor';
+    var customLabel = document.createElement('span');
+    customLabel.className = 'helper-text';
+    customLabel.textContent = '也可以用自己的话写一个原因';
+    customWrap.appendChild(customLabel);
+    var customInput = document.createElement('input');
+    customInput.className = 'field-input';
+    customInput.type = 'text';
+    customInput.maxLength = 24;
+    customInput.placeholder = '比如：最近总觉得晚上太散了';
+    customInput.value = state.whyNowSource === 'custom' ? state.reason : '';
+    customInput.addEventListener('input', function () {
+      state.reason = customInput.value.trim();
+      state.whyNowSource = 'custom';
+      state.readyToSave = false;
+      renderPreview();
+    });
+    customWrap.appendChild(customInput);
+    container.appendChild(customWrap);
+
     container.appendChild(renderStepFooter({
       hint: '只保留一个最贴近现在的原因。',
       primaryText: '继续',
@@ -562,6 +618,36 @@
     var grid = document.createElement('div');
     grid.className = 'option-grid';
 
+    // If explore source has suggested actions, show a dedicated card first
+    if (state.exploreSource && state.exploreSource.suggestedEntryAction) {
+      var exploreCard = document.createElement('button');
+      exploreCard.type = 'button';
+      exploreCard.className = 'option-card micro-card micro-card--explore'
+        + (state.microHabitType === 'explore-import' ? ' is-selected' : '');
+      exploreCard.innerHTML = ''
+        + '<span class="option-card__badge option-card__badge--explore">来自探索页</span>'
+        + '<div class="option-card__title">' + state.exploreSource.title + '</div>'
+        + '<div class="micro-card__pair">'
+        + '  <span class="micro-card__label">入场动作</span>'
+        + '  <div>' + (state.exploreSource.suggestedEntryAction || '') + '</div>'
+        + '</div>'
+        + '<div class="micro-card__pair">'
+        + '  <span class="micro-card__label">真实动作</span>'
+        + '  <div>' + (state.exploreSource.suggestedRealAction || '') + '</div>'
+        + '</div>';
+      exploreCard.addEventListener('click', function () {
+        state.microHabitType = 'explore-import';
+        state.entryAction = state.exploreSource.suggestedEntryAction || '';
+        state.realAction = state.exploreSource.suggestedRealAction || '';
+        state.prompt = '';
+        state.promptSentence = '';
+        state.promptSource = 'template';
+        state.readyToSave = false;
+        renderAll();
+      });
+      grid.appendChild(exploreCard);
+    }
+
     suggestions.forEach(function (suggestion) {
       var button = document.createElement('button');
       button.type = 'button';
@@ -606,11 +692,20 @@
     PROMPT_OPTIONS.forEach(function (prompt) {
       var button = document.createElement('button');
       button.type = 'button';
-      button.className = 'choice-pill' + (state.prompt === prompt ? ' is-selected' : '');
+      var isSelected = state.prompt === prompt && state.promptSource === 'template';
+      button.className = 'choice-pill' + (isSelected ? ' is-selected' : '');
       button.textContent = prompt;
       button.addEventListener('click', function () {
-        state.prompt = prompt;
-        updatePromptSentence();
+        if (state.prompt === prompt && state.promptSource === 'template') {
+          // Toggle off — clicking the same selected pill deselects it
+          state.prompt = '';
+          state.promptSentence = '';
+          state.promptSource = 'template';
+        } else {
+          state.prompt = prompt;
+          state.promptSource = 'template';
+          updatePromptSentence();
+        }
         state.readyToSave = false;
         renderAll();
       });
@@ -623,6 +718,29 @@
     sentence.className = 'prompt-preview';
     sentence.textContent = state.promptSentence || '当我……之后，我就……';
     container.appendChild(sentence);
+
+    // Custom prompt input — placed between prompt choices and strength
+    var customWrap = document.createElement('div');
+    customWrap.className = 'inline-editor';
+    var customLabel = document.createElement('span');
+    customLabel.className = 'helper-text';
+    customLabel.textContent = '也可以写一个自己的提示点';
+    customWrap.appendChild(customLabel);
+    var customInput = document.createElement('input');
+    customInput.className = 'field-input';
+    customInput.type = 'text';
+    customInput.maxLength = 24;
+    customInput.placeholder = '比如：回到宿舍放下包以后';
+    customInput.value = state.promptSource === 'custom' ? state.prompt : '';
+    customInput.addEventListener('input', function () {
+      state.prompt = customInput.value.trim();
+      state.promptSource = 'custom';
+      updatePromptSentence();
+      state.readyToSave = false;
+      renderPreview();
+    });
+    customWrap.appendChild(customInput);
+    container.appendChild(customWrap);
 
     var strengthTitle = document.createElement('div');
     strengthTitle.className = 'status-inline';
@@ -1000,6 +1118,7 @@
       state.realAction = '';
       state.prompt = '';
       state.promptSentence = '';
+      state.promptSource = 'template';
       state.promptStrength = '无打扰视觉提示';
       state.readyToSave = false;
       return;
@@ -1010,6 +1129,7 @@
       state.realAction = '';
       state.prompt = '';
       state.promptSentence = '';
+      state.promptSource = 'template';
       state.promptStrength = '无打扰视觉提示';
       state.readyToSave = false;
       return;
@@ -1018,6 +1138,7 @@
 
   function resetTemplateDependentState() {
     state.reason = '';
+    state.whyNowSource = 'template';
     state.candidates = [];
     state.goldenBehavior = '';
     state.microHabitType = '';
@@ -1025,6 +1146,7 @@
     state.realAction = '';
     state.prompt = '';
     state.promptSentence = '';
+    state.promptSource = 'template';
     state.promptStrength = '无打扰视觉提示';
     state.mapPositions = {};
     state.readyToSave = false;
@@ -1063,6 +1185,7 @@
     if (changed) {
       state.prompt = '';
       state.promptSentence = '';
+      state.promptSource = 'template';
     }
     state.readyToSave = false;
   }
@@ -1206,6 +1329,7 @@
       templateKey: state.templateKey || DEFAULT_TEMPLATE_KEY,
       wish: state.wish,
       reason: state.reason,
+      whyNowSource: state.whyNowSource || 'template',
       candidates: state.candidates.slice(),
       goldenBehavior: state.goldenBehavior,
       microHabitType: state.microHabitType,
@@ -1213,11 +1337,16 @@
       realAction: state.realAction,
       prompt: state.prompt,
       promptSentence: state.promptSentence,
+      promptSource: state.promptSource || 'template',
       promptStrength: state.promptStrength || '无打扰视觉提示',
       trialDays: 3,
       createdAt: getTodayISO(),
       records: [],
-      adjustments: []
+      adjustments: [],
+      exploreDraftSource: state.exploreSource ? {
+        category: state.exploreSource.category,
+        title: state.exploreSource.title
+      } : null
     };
 
     if (window.AppState && typeof window.AppState.addHabit === 'function') {
@@ -1252,6 +1381,51 @@
     var month = String(date.getMonth() + 1).padStart(2, '0');
     var day = String(date.getDate()).padStart(2, '0');
     return date.getFullYear() + '-' + month + '-' + day;
+  }
+
+  function loadExploreDraft() {
+    try {
+      var raw = localStorage.getItem('habitGarden.exploreIdea');
+      if (!raw) return;
+      var draft = JSON.parse(raw);
+      // Clear draft after reading so it doesn't persist on refresh
+      localStorage.removeItem('habitGarden.exploreIdea');
+
+      // Only process drafts with the correct source marker
+      if (draft.source !== 'explore') return;
+      if (!draft.title) return;
+
+      // Store explore source for display and later use — never as wish
+      state.exploreSource = {
+        category: draft.category || '',
+        title: draft.title || '',
+        designHint: draft.designHint || '',
+        starterType: draft.starterType || '',
+        suggestedEntryAction: draft.suggestedEntryAction || '',
+        suggestedRealAction: draft.suggestedRealAction || '',
+        suggestedPrompt: draft.suggestedPrompt || ''
+      };
+
+      // Pre-fill micro-habit fields as suggestions only
+      if (draft.suggestedEntryAction) {
+        state.entryAction = draft.suggestedEntryAction;
+      }
+      if (draft.suggestedRealAction) {
+        state.realAction = draft.suggestedRealAction;
+      }
+      if (draft.suggestedPrompt) {
+        state.prompt = draft.suggestedPrompt;
+        state.promptSource = 'custom';
+        updatePromptSentence();
+      }
+
+      // Mark as explore-import so the micro step can highlight the source card
+      state.microHabitType = 'explore-import';
+
+      state.readyToSave = false;
+    } catch (e) {
+      // Ignore malformed draft
+    }
   }
 
   function clamp(value, min, max) {

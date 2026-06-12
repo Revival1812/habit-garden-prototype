@@ -1,0 +1,313 @@
+/* ========================================
+   explore.css — category carousel + glow wall
+   ======================================== */
+
+/* ----- page layout ----- */
+.explore-page {
+  max-width: 1120px;
+  padding-top: 28px;
+  padding-bottom: 48px;
+}
+
+.explore-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.explore-head__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.explore-kicker {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(220, 232, 213, 0.78);
+  color: var(--color-primary-dark);
+  font-size: 13px;
+}
+
+.explore-title {
+  max-width: 680px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.18;
+}
+
+/* ----- main layout: left categories + right glow wall ----- */
+.explore-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  align-items: start;
+}
+
+.explore-categories {
+  display: grid;
+  gap: 16px;
+}
+
+/* ----- category module ----- */
+.category-module {
+  border: 1px solid rgba(95, 143, 142, 0.14);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(ellipse at 14% 0%, rgba(143, 183, 182, 0.10), transparent 42%),
+    linear-gradient(180deg, rgba(255, 253, 247, 0.94), rgba(248, 251, 244, 0.84));
+  box-shadow: 0 10px 26px rgba(63, 95, 70, 0.06);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-module:hover {
+  border-color: rgba(95, 143, 142, 0.28);
+  box-shadow: 0 14px 32px rgba(63, 95, 70, 0.09);
+}
+
+.category-module__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 18px 12px;
+}
+
+.category-module__title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.category-module__hint {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* ----- carousel viewport ----- */
+.category-module__viewport {
+  position: relative;
+  overflow: hidden;
+  padding: 0 18px 16px;
+}
+
+.category-track {
+  display: flex;
+  gap: 14px;
+  transition: transform 650ms cubic-bezier(0.34, 0.76, 0.22, 1);
+  will-change: transform;
+}
+
+/* ----- explore card ----- */
+.explore-card {
+  flex: 0 0 calc(50% - 7px);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid rgba(63, 95, 70, 0.10);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.92), rgba(255, 253, 247, 0.72));
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  user-select: none;
+}
+
+.explore-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(95, 143, 142, 0.46);
+  background: rgba(255, 253, 247, 0.98);
+  box-shadow: 0 12px 24px rgba(63, 95, 70, 0.08);
+}
+
+.explore-card:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.explore-card__title {
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.explore-card__desc {
+  color: var(--color-text-soft);
+  font-size: 13px;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.explore-card__action {
+  color: var(--color-primary-dark);
+  font-size: 12px;
+  align-self: flex-start;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.explore-card:hover .explore-card__action {
+  opacity: 0.8;
+  transform: translateY(0);
+}
+
+/* ----- glow wall ----- */
+.glow-wall {
+  position: sticky;
+  top: 18px;
+  border: 1px solid rgba(169, 130, 90, 0.14);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at top left, rgba(244, 223, 155, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 253, 247, 0.96), rgba(255, 250, 241, 0.92));
+  box-shadow: 0 10px 26px rgba(63, 95, 70, 0.06);
+  padding: 20px;
+  overflow: hidden;
+}
+
+.glow-wall__glow {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(244, 223, 155, 0.95) 0 28%, rgba(244, 223, 155, 0.24) 29% 58%, transparent 59%);
+  animation: glowPulse 2.8s ease-in-out infinite;
+}
+
+.glow-wall__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.glow-wall__title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.glow-wall__sub {
+  margin: 0 0 14px;
+  color: var(--color-text-soft);
+  font-size: 13px;
+}
+
+.glow-wall__messages {
+  display: grid;
+  gap: 8px;
+}
+
+.glow-message {
+  margin: 0;
+  padding: 12px 13px;
+  border: 1px solid rgba(169, 130, 90, 0.10);
+  border-radius: var(--radius-md);
+  background: rgba(244, 223, 155, 0.14);
+  color: var(--color-text-soft);
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.glow-message.is-exiting {
+  animation: glowMsgOut 0.42s ease forwards;
+}
+
+.glow-message.is-entering {
+  animation: glowMsgIn 0.48s ease both;
+}
+
+@keyframes glowMsgOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glowMsgIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----- responsive ----- */
+@media (max-width: 960px) {
+  .explore-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .glow-wall {
+    position: static;
+  }
+
+  .explore-card {
+    flex: 0 0 calc(50% - 7px);
+  }
+}
+
+@media (max-width: 680px) {
+  .explore-page {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .explore-head {
+    flex-direction: column;
+  }
+
+  .explore-title {
+    font-size: 26px;
+  }
+
+  .category-module__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .explore-card {
+    flex: 0 0 85%;
+  }
+
+  .category-module__viewport {
+    padding: 0 14px 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .explore-card {
+    flex: 0 0 88%;
+  }
+}
