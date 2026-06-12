@@ -1,0 +1,5 @@
+# 忽略 claude 相关配置
+.claude/
+
+# 忽略所有以 .tmp-edge 开头的临时缓存文件夹
+.tmp-edge*/
