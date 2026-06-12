@@ -3,6 +3,7 @@
   'use strict';
 
   var activePopover = null;
+  var activeBackdrop = null;
   var activeOptions = {};
 
   var STATUS_OPTIONS = [
@@ -201,6 +202,11 @@
       list = list.filter(function (habit) { return habit.id === opts.focusHabitId; });
     }
 
+    var backdrop = document.createElement('div');
+    backdrop.className = 'record-backdrop';
+    backdrop.hidden = true;
+    backdrop.addEventListener('click', closeTodayRecordPopover);
+
     var popover = document.createElement('section');
     popover.className = 'today-record-popover';
     popover.setAttribute('aria-label', '今日记录');
@@ -243,24 +249,43 @@
     }
 
     popover.appendChild(body);
-    container.replaceChildren(popover);
+    container.replaceChildren(backdrop, popover);
 
     activePopover = popover;
+    activeBackdrop = backdrop;
     activeOptions = opts;
     return popover;
   }
 
+  function handleEscape(event) {
+    if (event.key === 'Escape') {
+      closeTodayRecordPopover();
+    }
+  }
+
   function openTodayRecordPopover() {
     if (!activePopover) return;
+    if (activeBackdrop) {
+      activeBackdrop.hidden = false;
+      activeBackdrop.classList.add('is-open');
+    }
+    document.body.classList.add('is-record-popover-open');
     activePopover.hidden = false;
     activePopover.classList.add('is-open');
+    document.addEventListener('keydown', handleEscape);
     if (typeof activeOptions.onOpen === 'function') activeOptions.onOpen(activePopover);
   }
 
   function closeTodayRecordPopover() {
     if (!activePopover) return;
+    if (activeBackdrop) {
+      activeBackdrop.classList.remove('is-open');
+      activeBackdrop.hidden = true;
+    }
+    document.body.classList.remove('is-record-popover-open');
     activePopover.classList.remove('is-open');
     activePopover.hidden = true;
+    document.removeEventListener('keydown', handleEscape);
     if (typeof activeOptions.onClose === 'function') activeOptions.onClose(activePopover);
   }
 

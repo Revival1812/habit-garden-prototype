@@ -236,15 +236,44 @@
   text-decoration: none;
 }
 
+.garden-page,
+.detail-page {
+  transition: filter 220ms ease;
+}
+
+body.is-record-popover-open .garden-page,
+body.is-record-popover-open .detail-page {
+  filter: blur(2px) saturate(0.96);
+}
+
+.record-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(255, 253, 247, 0.34);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.record-backdrop.is-open {
+  opacity: 1;
+}
+
 .today-record-popover {
   position: fixed;
   right: clamp(16px, 4vw, 48px);
   top: 76px;
-  z-index: 20;
-  width: min(520px, calc(100vw - 32px));
-  height: min(560px, calc(100vh - 112px));
-  padding: 18px;
-  border-radius: 20px;
+  z-index: 120;
+  display: flex;
+  width: min(680px, calc(100vw - 32px));
+  max-height: min(720px, calc(100vh - 112px));
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 22px;
   opacity: 0;
   transform: translateY(-8px);
   transition: opacity 180ms ease, transform 180ms ease;
@@ -252,7 +281,7 @@
 
 .today-record-host {
   position: relative;
-  z-index: 20;
+  z-index: 120;
 }
 
 .today-record-popover.is-open {
@@ -266,12 +295,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
 }
 
 .today-record-popover__header h2,
 .today-record-row__title {
   margin: 0;
+}
+
+.today-record-popover__header {
+  flex: 0 0 auto;
+}
+
+.today-record-popover__header h2 {
+  color: var(--river-text);
+  font-size: 1.28rem;
+  font-weight: 650;
+  line-height: 1.25;
 }
 
 .today-record-row__title {
@@ -289,8 +329,8 @@
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
-  padding: 3px 9px;
+  min-height: 28px;
+  padding: 4px 10px;
   border: 1px solid rgba(63, 95, 70, 0.12);
   border-radius: 999px;
   background: rgba(255, 253, 247, 0.66);
@@ -301,8 +341,9 @@
 }
 
 .today-record-popover__close {
-  width: 32px;
-  height: 32px;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
   border: 0;
   border-radius: 999px;
   background: rgba(95, 127, 99, 0.1);
@@ -316,33 +357,49 @@
   color: var(--river-text-soft);
 }
 
+.today-record-popover__helper {
+  flex: 0 0 auto;
+  margin: 8px 44px 16px 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .today-record-row__hint {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-size: 0.88rem;
   line-height: 1.45;
 }
 
 .today-record-popover__body {
-  height: calc(100% - 86px);
-  overflow: auto;
-  padding-right: 4px;
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  gap: 14px;
+  padding: 2px 8px 2px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(95, 127, 99, 0.24) transparent;
 }
 
 .today-record-row {
-  padding: 14px 0;
-  border-top: 1px solid var(--river-border);
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid rgba(63, 95, 70, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 253, 247, 0.58);
 }
 
 .today-record-statuses {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin: 12px 0;
+  gap: 10px;
+  margin: 0;
 }
 
 .today-record-status,
 .today-record-save {
-  min-height: 36px;
+  min-height: 40px;
   border: 1px solid var(--river-border);
   border-radius: 999px;
   background: rgba(255, 253, 247, 0.74);
@@ -368,8 +425,8 @@
 
 .today-record-note {
   display: grid;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 2px;
   color: var(--river-text-soft);
 }
 
@@ -382,17 +439,18 @@
 
 .today-record-note-input {
   width: 100%;
-  min-height: 64px;
+  min-height: 76px;
   resize: vertical;
   border: 1px solid var(--river-border);
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 14px;
+  padding: 11px 12px;
   background: rgba(255, 253, 247, 0.72);
   color: var(--river-text);
 }
 
 .today-record-save {
-  padding: 0 14px;
+  min-width: 112px;
+  padding: 0 16px;
   background: var(--river-primary);
   color: #fffdf7;
 }
@@ -403,7 +461,7 @@
 }
 
 .today-record-row.is-saved {
-  background: rgba(143, 183, 182, 0.08);
+  background: rgba(143, 183, 182, 0.1);
 }
 
 .today-record-row.is-saved .today-record-current {
@@ -720,7 +778,25 @@
     top: auto;
     bottom: 12px;
     width: auto;
-    height: min(560px, calc(100vh - 76px));
+    max-height: min(620px, calc(100vh - 76px));
+    padding: 18px;
+  }
+
+  .today-record-row {
+    padding: 16px;
+  }
+
+  .today-record-row__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .today-record-current {
+    max-width: 100%;
+  }
+
+  .record-backdrop {
+    background: rgba(255, 253, 247, 0.4);
   }
 
   .river-detail-drawer {
@@ -735,6 +811,7 @@
 @media (prefers-reduced-motion: reduce) {
   .river-item,
   .today-record-popover,
+  .record-backdrop,
   .habit-heatmap__day,
   .river-tooltip,
   .river-fade-in {

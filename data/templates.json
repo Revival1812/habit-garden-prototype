@@ -1,40 +1,224 @@
 {
-  "templates": [
-    {
-      "id": "t_early_sleep",
-      "name": "早睡",
-      "wish": "晚上早点睡",
-      "hint": "睡前放下手机，房间灯光调暗"
+  "templates": {
+    "sleep_early": {
+      "id": "sleep_early",
+      "label": "早睡",
+      "wish": "早睡",
+      "hint": "先把晚上收轻一点",
+      "why_now": [
+        "已经困扰一阵子了",
+        "最近更想让作息稳一点",
+        "白天状态有点乱",
+        "想先从晚上收一收",
+        "只是想先试试看"
+      ],
+      "how_it_happens": [
+        { "id": "sleep_01", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "先让晚上慢下来一点。", "microType": "scene-transition" },
+        { "id": "sleep_02", "category": "change-environment", "title": "回到宿舍后打开台灯", "description": "用轻一点的光提示收尾。", "microType": "preparation-action" },
+        { "id": "sleep_03", "category": "reduce-friction", "title": "洗漱后把手机放远一点", "description": "减少继续刷的机会。", "microType": "preparation-action" },
+        { "id": "sleep_04", "category": "change-environment", "title": "插上充电器后关掉大灯", "description": "让环境先进入晚上。", "microType": "scene-transition" },
+        { "id": "sleep_05", "category": "entry-only", "title": "先躺到床上不刷别的内容", "description": "先到床上，不要求立刻睡着。", "microType": "entry-only" },
+        { "id": "sleep_06", "category": "entry-only", "title": "只做入场动作：打开台灯", "description": "先留一个很轻的开始。", "microType": "preparation-action" },
+        { "id": "sleep_07", "category": "scene-transition", "title": "穿上睡衣就先进入准备状态", "description": "让身体知道今天要收尾了。", "microType": "scene-transition" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "轻一点", "entryAction": "先提前 10 分钟上床", "realAction": "提前 10 分钟躺下" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "先到床边", "entryAction": "先回到床边坐下", "realAction": "坐下后把手机放远一点" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "先准备好", "entryAction": "先把充电器插好", "realAction": "插好后把手机放下" },
+        { "type": "environment-adjustment", "label": "环境调整型", "badge": "调轻环境", "entryAction": "先关掉顶灯，只留台灯", "realAction": "在台灯下准备睡觉" },
+        { "type": "micro-action", "label": "微动作型", "badge": "先停一下", "entryAction": "先放下手机 2 分钟", "realAction": "2 分钟后决定要不要继续收尾" },
+        { "type": "entry-only", "label": "入场型", "badge": "先入场", "entryAction": "先躺下，不要求立刻睡着", "realAction": "躺下后让房间安静一点" }
+      ]
     },
-    {
-      "id": "t_study",
-      "name": "学习",
-      "wish": "每天学一点",
-      "hint": "从打开笔记开始，先坐下"
+    "study": {
+      "id": "study",
+      "label": "学习",
+      "wish": "学习",
+      "hint": "先让学习重新靠近一点",
+      "why_now": [
+        "最近被某件事提醒了",
+        "这阵子有点松",
+        "想把节奏重新找回来",
+        "最近更想让自己稳一点",
+        "先从一点点开始试试"
+      ],
+      "how_it_happens": [
+        { "id": "study_01", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "先坐过去，不急着做很多。", "microType": "scene-transition" },
+        { "id": "study_02", "category": "preparation-action", "title": "打开电脑后先打开资料", "description": "让资料先出现在眼前。", "microType": "preparation-action" },
+        { "id": "study_03", "category": "scene-transition", "title": "回到宿舍后先坐下", "description": "先回到会发生的位置。", "microType": "scene-transition" },
+        { "id": "study_04", "category": "preparation-action", "title": "拿出书后先翻到那一页", "description": "减少寻找和犹豫。", "microType": "preparation-action" },
+        { "id": "study_05", "category": "reduce-friction", "title": "只读一页", "description": "先用很小的一页开始。", "microType": "quantity-reduction" },
+        { "id": "study_06", "category": "entry-only", "title": "只做入场动作：打开文档", "description": "打开就算入场。", "microType": "entry-only" },
+        { "id": "study_07", "category": "chain-existing", "title": "打开台灯后先看一眼提纲", "description": "把学习挂在台灯之后。", "microType": "scene-transition" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "先 5 分钟", "entryAction": "先学 5 分钟", "realAction": "学习 5 分钟" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "先到书桌", "entryAction": "先走到书桌前", "realAction": "坐下后看一眼资料" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "先翻开", "entryAction": "先把书翻开", "realAction": "看完当前这一页" },
+        { "type": "task-splitting", "label": "任务拆分型", "badge": "只看一页", "entryAction": "先只看一页", "realAction": "读完这一页再停下" },
+        { "type": "entry-only", "label": "入场型", "badge": "先打开", "entryAction": "先打开文档，不要求继续太多", "realAction": "打开后写下今天要看的标题" },
+        { "type": "light-start", "label": "轻启动型", "badge": "一行开始", "entryAction": "先写一行标题", "realAction": "写完标题后看一眼资料" }
+      ]
     },
-    {
-      "id": "t_exercise",
-      "name": "运动",
-      "wish": "让身体动起来",
-      "hint": "先换上运动鞋，走到楼下"
+    "exercise": {
+      "id": "exercise",
+      "label": "运动",
+      "wish": "运动",
+      "hint": "先让身体动起来一点",
+      "why_now": [
+        "想让身体动起来一点",
+        "最近坐得太久了",
+        "想把身体状态找回来",
+        "生活有点闷，想松一松",
+        "先别要求太多，先开始"
+      ],
+      "how_it_happens": [
+        { "id": "exercise_01", "category": "scene-transition", "title": "回到宿舍后先换鞋", "description": "先让身体进入现场。", "microType": "preparation-action" },
+        { "id": "exercise_02", "category": "chain-existing", "title": "早上起床后先站起来活动一下", "description": "挂在起床之后。", "microType": "scene-transition" },
+        { "id": "exercise_03", "category": "scene-transition", "title": "晚饭后先走到楼下", "description": "先走到门口附近。", "microType": "scene-transition" },
+        { "id": "exercise_04", "category": "preparation-action", "title": "穿上运动鞋", "description": "只换鞋也算开始靠近。", "microType": "preparation-action" },
+        { "id": "exercise_05", "category": "reduce-friction", "title": "先做一个拉伸动作", "description": "用一个动作让身体醒过来。", "microType": "micro-action" },
+        { "id": "exercise_06", "category": "entry-only", "title": "只做入场动作：换上运动服", "description": "先进入运动状态。", "microType": "entry-only" },
+        { "id": "exercise_07", "category": "chain-existing", "title": "打开运动视频后站起来", "description": "先站起来，不急着做完整。", "microType": "scene-transition" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "2 分钟", "entryAction": "先动 2 分钟", "realAction": "活动身体 2 分钟" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "到门口", "entryAction": "先走到门口", "realAction": "到门口后走几步" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "先换鞋", "entryAction": "先穿上运动鞋", "realAction": "穿好后站起来活动一下" },
+        { "type": "micro-action", "label": "微动作型", "badge": "一个拉伸", "entryAction": "先做一次拉伸", "realAction": "做完后再走几步" },
+        { "type": "entry-only", "label": "入场型", "badge": "站起来", "entryAction": "先站起来", "realAction": "站起来后活动肩颈" },
+        { "type": "light-start", "label": "轻启动型", "badge": "几步", "entryAction": "先走几步", "realAction": "走几步后停一下" }
+      ]
     },
-    {
-      "id": "t_read",
-      "name": "阅读",
-      "wish": "每天读一点书",
-      "hint": "把书放在枕边，翻开就行"
+    "read": {
+      "id": "read",
+      "label": "阅读",
+      "wish": "阅读",
+      "hint": "先把阅读放回生活里",
+      "why_now": [
+        "想让自己安静一点",
+        "最近更想留一点自己的时间",
+        "想把注意力收回来一点",
+        "只是想先轻轻开始",
+        "最近想把阅读放回生活里"
+      ],
+      "how_it_happens": [
+        { "id": "read_01", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "让阅读有一个安静的位置。", "microType": "scene-transition" },
+        { "id": "read_02", "category": "change-environment", "title": "回到宿舍后打开台灯", "description": "用台灯把注意力收回来。", "microType": "scene-transition" },
+        { "id": "read_03", "category": "preparation-action", "title": "把书放在枕边", "description": "让书先出现在手边。", "microType": "preparation-action" },
+        { "id": "read_04", "category": "reduce-friction", "title": "拿起书后翻开一页", "description": "先打开，不急着读多。", "microType": "micro-action" },
+        { "id": "read_05", "category": "reduce-friction", "title": "只读一页", "description": "用一页保留入口。", "microType": "quantity-reduction" },
+        { "id": "read_06", "category": "entry-only", "title": "只做入场动作：把书放到手边", "description": "让阅读更容易被看见。", "microType": "entry-only" },
+        { "id": "read_07", "category": "chain-existing", "title": "打开台灯后坐下", "description": "挂在台灯之后。", "microType": "scene-transition" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "1 页", "entryAction": "先读 1 页", "realAction": "读完 1 页" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "到位置", "entryAction": "先坐到阅读的位置", "realAction": "坐下后拿起书" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "拿出来", "entryAction": "先把书拿出来", "realAction": "翻开今天要看的地方" },
+        { "type": "micro-action", "label": "微动作型", "badge": "翻一页", "entryAction": "先翻开今天要看的那一页", "realAction": "读第一段" },
+        { "type": "entry-only", "label": "入场型", "badge": "在眼前", "entryAction": "先把书放在眼前", "realAction": "看一眼标题" },
+        { "type": "light-start", "label": "轻启动型", "badge": "一句", "entryAction": "先读一句", "realAction": "读完这一句" }
+      ]
     },
-    {
-      "id": "t_diet",
-      "name": "减肥",
-      "wish": "吃得轻一点",
-      "hint": "先把零食放到看不见的地方"
+    "diet": {
+      "id": "diet",
+      "label": "减肥",
+      "wish": "减肥",
+      "hint": "先让饮食轻一点",
+      "why_now": [
+        "最近更想让身体轻一点",
+        "想先让生活有一点秩序",
+        "饮食状态有点乱",
+        "最近更想先收一收",
+        "先从能做的第一步开始"
+      ],
+      "how_it_happens": [
+        { "id": "diet_01", "category": "chain-existing", "title": "吃饭前先喝几口水", "description": "把入口放在饭前。", "microType": "micro-action" },
+        { "id": "diet_02", "category": "reduce-friction", "title": "晚饭后先不拿零食", "description": "先留出一个停顿。", "microType": "entry-only" },
+        { "id": "diet_03", "category": "change-environment", "title": "回到宿舍后先把零食收起来", "description": "让环境更容易开始。", "microType": "environment-adjustment" },
+        { "id": "diet_04", "category": "change-environment", "title": "先把水果放到看得见的地方", "description": "把更轻的选择放近一点。", "microType": "preparation-action" },
+        { "id": "diet_05", "category": "entry-only", "title": "只做入场动作：把水杯放在桌上", "description": "先让水杯出现。", "microType": "entry-only" },
+        { "id": "diet_06", "category": "chain-existing", "title": "打开冰箱时先看健康选项", "description": "先看一眼再决定。", "microType": "scene-transition" },
+        { "id": "diet_07", "category": "scene-transition", "title": "晚饭后先坐到书桌前而不是找零食", "description": "换一个更容易停下的位置。", "microType": "scene-transition" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "少一点", "entryAction": "今晚少加一份零食", "realAction": "晚饭后不额外拿第二份零食" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "离开位置", "entryAction": "先离开容易吃零食的位置", "realAction": "离开后坐到书桌前" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "装满水", "entryAction": "先把水杯装满", "realAction": "喝几口水后再决定" },
+        { "type": "environment-adjustment", "label": "环境调整型", "badge": "收起来", "entryAction": "先把零食收进柜子", "realAction": "收好后把水果放到眼前" },
+        { "type": "micro-action", "label": "微动作型", "badge": "一口水", "entryAction": "先喝一口水", "realAction": "喝完后停 30 秒" },
+        { "type": "entry-only", "label": "入场型", "badge": "不拿零食", "entryAction": "先不拿零食，只做第一步", "realAction": "不拿零食后坐回原位" }
+      ]
     },
-    {
-      "id": "t_notes",
-      "name": "记录笔记",
-      "wish": "把想法记下来",
-      "hint": "打开笔记应用，写一行"
+    "notes": {
+      "id": "notes",
+      "label": "记录笔记",
+      "wish": "记录笔记",
+      "hint": "先接住一个想法",
+      "why_now": [
+        "最近脑子里的东西有点散",
+        "想给自己留一点痕迹",
+        "想把一些想法接住",
+        "最近更想让自己清楚一点",
+        "先从一小句开始"
+      ],
+      "how_it_happens": [
+        { "id": "notes_01", "category": "preparation-action", "title": "打开电脑后翻开笔记", "description": "先把笔记放到眼前。", "microType": "preparation-action" },
+        { "id": "notes_02", "category": "chain-existing", "title": "晚饭后坐到书桌前", "description": "在安静一点的时候写一句。", "microType": "scene-transition" },
+        { "id": "notes_03", "category": "reduce-friction", "title": "打开笔记软件后写一行", "description": "一行就够开始。", "microType": "quantity-reduction" },
+        { "id": "notes_04", "category": "scene-transition", "title": "回到宿舍后先翻开本子", "description": "先到记录会发生的位置。", "microType": "preparation-action" },
+        { "id": "notes_05", "category": "entry-only", "title": "只做入场动作：打开笔记页", "description": "打开就是入场。", "microType": "entry-only" },
+        { "id": "notes_06", "category": "micro-action", "title": "想到一件事时先记一个词", "description": "先接住一个关键词。", "microType": "micro-action" },
+        { "id": "notes_07", "category": "chain-existing", "title": "打开台灯后坐下写一句", "description": "把记录挂在台灯之后。", "microType": "scene-transition" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "1 句话", "entryAction": "先记 1 句话", "realAction": "写下今天的一句话" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "到书桌", "entryAction": "先坐到书桌前", "realAction": "坐下后打开笔记" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "打开页", "entryAction": "先打开笔记页", "realAction": "打开后写一行" },
+        { "type": "micro-action", "label": "微动作型", "badge": "关键词", "entryAction": "先写下一个关键词", "realAction": "围绕关键词补一句" },
+        { "type": "entry-only", "label": "入场型", "badge": "翻开页", "entryAction": "先翻开今天这一页", "realAction": "在这一页写标题" },
+        { "type": "light-start", "label": "轻启动型", "badge": "标题", "entryAction": "先写标题", "realAction": "标题下面留一行" }
+      ]
+    },
+    "custom": {
+      "id": "custom",
+      "label": "自定义",
+      "wish": "",
+      "hint": "用中性模板轻轻开始",
+      "custom": true,
+      "why_now": [
+        "最近被某件事提醒了",
+        "已经困扰一阵子了",
+        "想让生活轻一点",
+        "想先给自己一点秩序",
+        "只是想先试试看"
+      ],
+      "how_it_happens": [
+        { "id": "custom_01", "category": "preparation-action", "title": "把要做的东西放到眼前", "description": "先让它被看见。", "microType": "preparation-action" },
+        { "id": "custom_02", "category": "scene-transition", "title": "先坐到会发生的位置", "description": "先到现场。", "microType": "scene-transition" },
+        { "id": "custom_03", "category": "entry-only", "title": "先做一个入场动作", "description": "只做开头也可以。", "microType": "entry-only" },
+        { "id": "custom_04", "category": "chain-existing", "title": "绑在一个已经会发生的动作后面", "description": "让它跟着已有节奏出现。", "microType": "scene-transition" },
+        { "id": "custom_05", "category": "reduce-friction", "title": "只做最小的一步", "description": "先保留一个很小的入口。", "microType": "quantity-reduction" },
+        { "id": "custom_06", "category": "change-environment", "title": "先把环境整理到更容易开始", "description": "让下一步更近一点。", "microType": "environment-adjustment" },
+        { "id": "custom_07", "category": "preparation-action", "title": "先打开那个页面 / 工具 / 物品", "description": "打开就算靠近了。", "microType": "preparation-action" }
+      ],
+      "starter_versions": [
+        { "type": "quantity-reduction", "label": "数量缩小型", "badge": "2 分钟", "entryAction": "先做 2 分钟", "realAction": "做满 2 分钟就停下" },
+        { "type": "scene-transition", "label": "场景切换型", "badge": "到那里", "entryAction": "先到那个地方", "realAction": "到那里后做第一步" },
+        { "type": "preparation-action", "label": "准备动作型", "badge": "放好", "entryAction": "先把需要的东西放好", "realAction": "放好后看一眼下一步" },
+        { "type": "micro-action", "label": "微动作型", "badge": "第一步", "entryAction": "先做第一步", "realAction": "做完第一步后停一下" },
+        { "type": "entry-only", "label": "入场型", "badge": "进现场", "entryAction": "先进入现场", "realAction": "在现场停留 1 分钟" },
+        { "type": "light-start", "label": "轻启动型", "badge": "一点痕迹", "entryAction": "先留下一点痕迹", "realAction": "留下痕迹后再决定下一步" }
+      ]
     }
+  },
+  "order": [
+    "sleep_early",
+    "study",
+    "exercise",
+    "read",
+    "diet",
+    "notes",
+    "custom"
   ]
 }
