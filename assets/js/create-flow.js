@@ -415,19 +415,18 @@
 
   function renderReasonStep(container) {
     var row = document.createElement('div');
-    row.className = 'choice-row';
+    row.className = 'choice-row choice-row--exclusive';
 
     getReasonOptions().forEach(function (reason) {
       var button = document.createElement('button');
       button.type = 'button';
       var isSelected = state.reason === reason && state.whyNowSource === 'template';
-      button.className = 'choice-pill' + (isSelected ? ' is-selected' : '');
+      button.className = 'choice-pill' + (isSelected ? ' is-selected' : '') + (isUsingCustomWhyNow() ? ' is-muted' : '');
       button.textContent = reason;
       button.addEventListener('click', function () {
         if (state.reason === reason && state.whyNowSource === 'template') {
-          // Toggle off — clicking the same selected pill deselects it
           state.reason = '';
-          state.whyNowSource = 'template';
+          state.whyNowSource = '';
         } else {
           state.reason = reason;
           state.whyNowSource = 'template';
@@ -442,7 +441,7 @@
 
     // Custom reason input
     var customWrap = document.createElement('div');
-    customWrap.className = 'inline-editor';
+    customWrap.className = 'inline-editor' + (isUsingCustomWhyNow() ? ' is-active' : '') + (isUsingTemplateWhyNow() ? ' is-locked' : '');
     var customLabel = document.createElement('span');
     customLabel.className = 'helper-text';
     customLabel.textContent = '也可以用自己的话写一个原因';
@@ -453,19 +452,27 @@
     customInput.maxLength = 24;
     customInput.placeholder = '比如：最近总觉得晚上太散了';
     customInput.value = state.whyNowSource === 'custom' ? state.reason : '';
+    customInput.disabled = isUsingTemplateWhyNow();
     customInput.addEventListener('input', function () {
-      state.reason = customInput.value.trim();
-      state.whyNowSource = 'custom';
+      var value = customInput.value.trim();
+      state.reason = value;
+      state.whyNowSource = value ? 'custom' : '';
       state.readyToSave = false;
       renderPreview();
+      updateReasonMutualState(row, customWrap, customInput, customState);
+      updateContinueButton(hasValidWhyNowSelection());
     });
     customWrap.appendChild(customInput);
+    var customState = document.createElement('span');
+    customState.className = 'inline-editor__state helper-text';
+    customWrap.appendChild(customState);
+    updateReasonMutualState(row, customWrap, customInput, customState);
     container.appendChild(customWrap);
 
     container.appendChild(renderStepFooter({
       hint: '只保留一个最贴近现在的原因。',
       primaryText: '继续',
-      canContinue: !!state.reason,
+      canContinue: hasValidWhyNowSelection(),
       onPrimary: function () {
         advanceFromStep(1);
       },
@@ -687,20 +694,19 @@
 
   function renderPromptStep(container) {
     var promptChoices = document.createElement('div');
-    promptChoices.className = 'choice-row';
+    promptChoices.className = 'choice-row choice-row--exclusive';
 
     PROMPT_OPTIONS.forEach(function (prompt) {
       var button = document.createElement('button');
       button.type = 'button';
       var isSelected = state.prompt === prompt && state.promptSource === 'template';
-      button.className = 'choice-pill' + (isSelected ? ' is-selected' : '');
+      button.className = 'choice-pill' + (isSelected ? ' is-selected' : '') + (isUsingCustomPrompt() ? ' is-muted' : '');
       button.textContent = prompt;
       button.addEventListener('click', function () {
         if (state.prompt === prompt && state.promptSource === 'template') {
-          // Toggle off — clicking the same selected pill deselects it
           state.prompt = '';
           state.promptSentence = '';
-          state.promptSource = 'template';
+          state.promptSource = '';
         } else {
           state.prompt = prompt;
           state.promptSource = 'template';
@@ -721,7 +727,7 @@
 
     // Custom prompt input — placed between prompt choices and strength
     var customWrap = document.createElement('div');
-    customWrap.className = 'inline-editor';
+    customWrap.className = 'inline-editor' + (isUsingCustomPrompt() ? ' is-active' : '') + (isUsingTemplatePrompt() ? ' is-locked' : '');
     var customLabel = document.createElement('span');
     customLabel.className = 'helper-text';
     customLabel.textContent = '也可以写一个自己的提示点';
@@ -732,14 +738,23 @@
     customInput.maxLength = 24;
     customInput.placeholder = '比如：回到宿舍放下包以后';
     customInput.value = state.promptSource === 'custom' ? state.prompt : '';
+    customInput.disabled = isUsingTemplatePrompt();
     customInput.addEventListener('input', function () {
-      state.prompt = customInput.value.trim();
-      state.promptSource = 'custom';
+      var value = customInput.value.trim();
+      state.prompt = value;
+      state.promptSource = value ? 'custom' : '';
       updatePromptSentence();
       state.readyToSave = false;
       renderPreview();
+      sentence.textContent = state.promptSentence || '当我……之后，我就……';
+      updatePromptMutualState(promptChoices, customWrap, customInput, customState);
+      updateContinueButton(hasValidPromptSelection());
     });
     customWrap.appendChild(customInput);
+    var customState = document.createElement('span');
+    customState.className = 'inline-editor__state helper-text';
+    customWrap.appendChild(customState);
+    updatePromptMutualState(promptChoices, customWrap, customInput, customState);
     container.appendChild(customWrap);
 
     var strengthTitle = document.createElement('div');
@@ -766,7 +781,7 @@
     container.appendChild(renderStepFooter({
       hint: '默认先用无打扰视觉提示。',
       primaryText: '先试运行 3 天',
-      canContinue: !!state.promptSentence,
+      canContinue: hasValidPromptSelection(),
       onPrimary: function () {
         state.readyToSave = true;
         state.currentStep = STEP_DEFS.length - 1;
@@ -928,18 +943,108 @@
     var primaryButton = document.createElement('button');
     primaryButton.type = 'button';
     primaryButton.className = 'btn btn--primary';
+    primaryButton.dataset.stepPrimary = 'true';
     primaryButton.textContent = options.primaryText || '继续';
     primaryButton.disabled = !options.canContinue;
     if (!options.canContinue) {
       primaryButton.style.opacity = '0.45';
       primaryButton.style.cursor = 'not-allowed';
-    } else {
-      primaryButton.addEventListener('click', options.onPrimary);
     }
+    primaryButton.addEventListener('click', function () {
+      if (!primaryButton.disabled && typeof options.onPrimary === 'function') {
+        options.onPrimary();
+      }
+    });
     actions.appendChild(primaryButton);
 
     footer.appendChild(actions);
     return footer;
+  }
+
+  function updateContinueButton(canContinue) {
+    if (!refs.stepCard) return;
+    var primaryButton = refs.stepCard.querySelector('[data-step-primary="true"]');
+    if (!primaryButton) return;
+
+    primaryButton.disabled = !canContinue;
+    primaryButton.style.opacity = canContinue ? '' : '0.45';
+    primaryButton.style.cursor = canContinue ? '' : 'not-allowed';
+  }
+
+  function hasValidWhyNowSelection() {
+    var value = (state.reason || '').trim();
+    return Boolean(
+      (state.whyNowSource === 'template' && value) ||
+      (state.whyNowSource === 'custom' && value)
+    );
+  }
+
+  function hasValidPromptSelection() {
+    var value = (state.prompt || '').trim();
+    return Boolean(
+      state.promptSentence &&
+      (
+        (state.promptSource === 'template' && value) ||
+        (state.promptSource === 'custom' && value)
+      )
+    );
+  }
+
+  function isUsingTemplateWhyNow() {
+    return state.whyNowSource === 'template' && !!(state.reason || '').trim();
+  }
+
+  function isUsingCustomWhyNow() {
+    return state.whyNowSource === 'custom' && !!(state.reason || '').trim();
+  }
+
+  function isUsingTemplatePrompt() {
+    return state.promptSource === 'template' && !!(state.prompt || '').trim();
+  }
+
+  function isUsingCustomPrompt() {
+    return state.promptSource === 'custom' && !!(state.prompt || '').trim();
+  }
+
+  function updateReasonMutualState(row, wrap, input, note) {
+    var usingCustom = isUsingCustomWhyNow();
+    var usingTemplate = isUsingTemplateWhyNow();
+    updateExclusiveChoiceRow(row, usingCustom);
+    updateInlineEditorState(wrap, input, note, usingCustom, usingTemplate);
+  }
+
+  function updatePromptMutualState(row, wrap, input, note) {
+    var usingCustom = isUsingCustomPrompt();
+    var usingTemplate = isUsingTemplatePrompt();
+    updateExclusiveChoiceRow(row, usingCustom);
+    updateInlineEditorState(wrap, input, note, usingCustom, usingTemplate);
+  }
+
+  function updateExclusiveChoiceRow(row, usingCustom) {
+    if (!row) return;
+    row.classList.toggle('is-custom-active', usingCustom);
+    row.querySelectorAll('.choice-pill').forEach(function (button) {
+      button.classList.toggle('is-muted', usingCustom);
+      if (usingCustom) {
+        button.classList.remove('is-selected');
+      }
+    });
+  }
+
+  function updateInlineEditorState(wrap, input, note, usingCustom, usingTemplate) {
+    if (wrap) {
+      wrap.classList.toggle('is-active', usingCustom);
+      wrap.classList.toggle('is-locked', usingTemplate);
+    }
+    if (input) input.disabled = usingTemplate;
+    if (!note) return;
+    if (usingTemplate) {
+      note.textContent = '已选择上方选项，如需自定义请先取消选择。';
+    } else if (usingCustom) {
+      note.textContent = '正在使用自己的说法。';
+    } else {
+      note.textContent = '';
+    }
   }
 
   function advanceFromStep(stepIndex) {
@@ -972,11 +1077,11 @@
 
   function isStepComplete(index) {
     if (index === 0) return !!state.wish;
-    if (index === 1) return !!state.reason;
+    if (index === 1) return hasValidWhyNowSelection();
     if (index === 2) return state.candidates.length > 0;
     if (index === 3) return !!state.goldenBehavior;
     if (index === 4) return !!state.microHabitType && !!state.entryAction && !!state.realAction;
-    if (index === 5) return !!state.prompt && !!state.promptSentence;
+    if (index === 5) return hasValidPromptSelection();
     return false;
   }
 

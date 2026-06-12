@@ -422,6 +422,23 @@
   border-radius: var(--radius-md);
   background: rgba(255, 253, 247, 0.58);
   border: 1px dashed rgba(95, 143, 142, 0.22);
+  transition: border-color var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-fast);
+}
+
+.inline-editor.is-active {
+  border-color: rgba(95, 143, 142, 0.52);
+  background: rgba(220, 232, 213, 0.32);
+  box-shadow: 0 0 0 4px rgba(220, 232, 213, 0.22);
+}
+
+.inline-editor.is-locked {
+  background: rgba(255, 253, 247, 0.42);
+  border-color: rgba(95, 143, 142, 0.14);
+}
+
+.inline-editor__state {
+  flex-basis: 100%;
+  min-height: 1.2em;
 }
 
 .field-input {
@@ -439,6 +456,13 @@
 .field-input:focus {
   border-color: rgba(95, 143, 142, 0.68);
   box-shadow: 0 0 0 4px rgba(220, 232, 213, 0.52);
+}
+
+.field-input:disabled {
+  color: rgba(104, 116, 102, 0.72);
+  background: rgba(240, 234, 223, 0.52);
+  border-color: rgba(63, 95, 70, 0.08);
+  cursor: not-allowed;
 }
 
 .field-input--compact {
@@ -479,6 +503,16 @@
     0 0 0 4px rgba(220, 232, 213, 0.54),
     0 8px 18px rgba(63, 95, 70, 0.09);
   font-weight: 500;
+}
+
+.choice-pill.is-muted {
+  opacity: 0.54;
+  background: rgba(255, 253, 247, 0.56);
+  border-color: rgba(63, 95, 70, 0.08);
+}
+
+.choice-pill.is-muted:hover {
+  opacity: 0.82;
 }
 
 .selected-chip {

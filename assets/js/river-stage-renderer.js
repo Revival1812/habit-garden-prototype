@@ -186,6 +186,9 @@
     var label = model ? model.getStatusLabel(status) : status;
     var asset = model ? model.getStatusAsset(status) : '';
     var objectType = model && model.getStatusObjectType ? model.getStatusObjectType(status) : status;
+    var isReal = status === 'real';
+    var closedLotusAsset = 'assets/svg/river-items/lotus-closure.svg';
+    var openLotusAsset = 'assets/svg/river-items/lotus.svg';
     var dateISO = slot.dateISO || slot.date;
     var note = record && record.note ? record.note : (record && record.reason ? record.reason : '');
     var dateLabel = slot.day && slot.monthIndex !== undefined
@@ -195,7 +198,7 @@
 
     var item = document.createElement('button');
     item.type = 'button';
-    item.className = 'river-item river-item--' + objectType;
+    item.className = 'river-item river-item--' + objectType + (isReal ? ' river-item-real lotus-bloom-item' : '');
     item.style.left = slot.x + '%';
     item.style.top = slot.y + '%';
     item.dataset.riverItem = 'true';
@@ -205,7 +208,8 @@
     item.dataset.dateLabel = dateLabel;
     item.dataset.status = status;
     item.dataset.label = label;
-    item.dataset.asset = asset;
+    item.dataset.asset = isReal ? closedLotusAsset : asset;
+    if (isReal) item.dataset.openAsset = openLotusAsset;
     item.dataset.note = note;
     item.dataset.tooltip = tooltip;
     item.setAttribute('aria-label', dateISO + '，' + label);
@@ -217,12 +221,16 @@
       item.setAttribute('aria-pressed', 'false');
     }
 
-    var img = document.createElement('img');
-    img.className = 'river-item__image';
-    img.src = asset;
-    img.alt = '';
-    img.setAttribute('aria-hidden', 'true');
-    item.appendChild(img);
+    if (isReal) {
+      appendLotusBloomImages(item, closedLotusAsset, openLotusAsset);
+    } else {
+      var img = document.createElement('img');
+      img.className = 'river-item__image';
+      img.src = asset;
+      img.alt = '';
+      img.setAttribute('aria-hidden', 'true');
+      item.appendChild(img);
+    }
 
     var dayLabel = document.createElement('span');
     dayLabel.className = 'river-item__day';
@@ -231,6 +239,22 @@
 
     target.appendChild(item);
     return item;
+  }
+
+  function appendLotusBloomImages(item, closedSrc, openSrc) {
+    var closedImg = document.createElement('img');
+    closedImg.className = 'river-item__image lotus-img lotus-img-closed';
+    closedImg.src = closedSrc;
+    closedImg.alt = '';
+    closedImg.setAttribute('aria-hidden', 'true');
+    item.appendChild(closedImg);
+
+    var openImg = document.createElement('img');
+    openImg.className = 'river-item__image lotus-img lotus-img-open';
+    openImg.src = openSrc;
+    openImg.alt = '';
+    openImg.setAttribute('aria-hidden', 'true');
+    item.appendChild(openImg);
   }
 
   window.RiverStageRenderer = {
