@@ -3,210 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>成长复盘</title>
+  <title>行为诊断</title>
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
-  <style>
-    .review-page {
-      max-width: 1120px;
-      padding-top: 30px;
-      padding-bottom: 46px;
-    }
-
-    .review-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-
-    .review-kicker {
-      display: inline-flex;
-      margin-bottom: 10px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(220, 232, 213, 0.78);
-      color: var(--color-primary-dark);
-      font-size: 13px;
-    }
-
-    .review-title {
-      max-width: 720px;
-      margin: 0;
-      color: var(--color-text);
-      font-size: 38px;
-      font-weight: 500;
-      line-height: 1.18;
-    }
-
-    .review-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .review-card {
-      background:
-        radial-gradient(circle at top left, rgba(244, 223, 155, 0.15), transparent 38%),
-        linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 250, 241, 0.96));
-    }
-
-    .map-card {
-      min-height: 190px;
-    }
-
-    .map-card__label,
-    .pattern-card__label {
-      display: inline-flex;
-      margin-bottom: 12px;
-      color: var(--color-text-soft);
-      font-size: 13px;
-    }
-
-    .map-card__title {
-      margin: 0 0 12px;
-      color: var(--color-text);
-      font-size: 22px;
-      font-weight: 500;
-    }
-
-    .map-card__copy {
-      color: var(--color-text-soft);
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .review-lower {
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
-      gap: 16px;
-    }
-
-    .pattern-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .pattern-row {
-      display: grid;
-      grid-template-columns: 132px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 13px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(63, 95, 70, 0.09);
-      background: rgba(255, 253, 247, 0.78);
-    }
-
-    .pattern-key {
-      color: var(--color-text-soft);
-      font-size: 13px;
-    }
-
-    .pattern-value {
-      color: var(--color-text);
-      font-size: 15px;
-      line-height: 1.45;
-    }
-
-    .suggestions {
-      display: grid;
-      gap: 12px;
-    }
-
-    .suggestion {
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(63, 95, 70, 0.1);
-      background: rgba(255, 253, 247, 0.78);
-    }
-
-    .suggestion.is-active {
-      background: rgba(220, 232, 213, 0.52);
-      border-color: rgba(111, 143, 114, 0.26);
-    }
-
-    .suggestion__title {
-      margin-bottom: 6px;
-      color: var(--color-text);
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    .suggestion__copy {
-      color: var(--color-text-soft);
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .empty-review {
-      min-height: 56vh;
-      display: grid;
-      place-items: center;
-      text-align: center;
-    }
-
-    .empty-review .card {
-      max-width: 430px;
-      background:
-        radial-gradient(circle at top, rgba(244, 223, 155, 0.18), transparent 42%),
-        var(--color-surface);
-    }
-
-    .empty-review h1 {
-      margin-bottom: 10px;
-      font-size: 30px;
-      font-weight: 500;
-    }
-
-    .empty-review p {
-      margin-bottom: 18px;
-      color: var(--color-text-soft);
-    }
-
-    @media (max-width: 880px) {
-      .review-grid,
-      .review-lower {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .review-page {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .review-head {
-        flex-direction: column;
-      }
-
-      .review-head .btn {
-        width: 100%;
-      }
-
-      .review-title {
-        font-size: 30px;
-      }
-
-      .pattern-row {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/review.css" />
   <script defer src="assets/js/app-state.js"></script>
+  <script defer src="assets/js/river-stage-model.js"></script>
+  <script defer src="assets/js/habit-heatmap.js"></script>
   <script defer src="assets/js/review.js"></script>
 </head>
-<body>
+<body class="river-bg-page">
   <div class="page-wrap">
     <nav class="top-nav" aria-label="主导航">
       <a href="index.html">花园</a>
       <a href="create.html">设计</a>
       <a href="review.html" class="active">复盘</a>
       <a href="explore.html">探索</a>
+      <a href="index.html" id="nav-today-record">今日记录</a>
     </nav>
 
     <main id="review-root" class="main-content review-page fade-in"></main>

@@ -85,6 +85,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ----- river background utility (shared by create, review, explore) ----- */
+.river-bg-page {
+  background-image:
+    linear-gradient(rgba(250, 247, 237, 0.74), rgba(250, 247, 237, 0.82)),
+    url("../images/river-stage-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
 img, svg {
   display: block;
   max-width: 100%;
@@ -305,7 +315,8 @@ button:disabled,
 }
 
 @media (max-width: 640px) {
-  body {
+  body,
+  .river-bg-page {
     background-attachment: scroll;
   }
 

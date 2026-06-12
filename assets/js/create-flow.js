@@ -239,10 +239,15 @@
 
     var progressPath = document.createElementNS(svgNS, 'path');
     var progressRatio = Math.max(1, Math.min(state.revealedSegments, STEP_DEFS.length)) / STEP_DEFS.length;
+    var targetOffset = Math.round(600 - (progressRatio * 600));
     progressPath.setAttribute('class', 'curve-progress');
     progressPath.setAttribute('d', fullPath);
     progressPath.setAttribute('pathLength', '600');
-    progressPath.style.setProperty('--curve-offset', String(Math.round(600 - (progressRatio * 600))));
+    // Set initial hidden state, then transition to target on next frame
+    progressPath.style.strokeDashoffset = '600';
+    requestAnimationFrame(function () {
+      progressPath.style.strokeDashoffset = String(targetOffset);
+    });
     svg.appendChild(progressPath);
 
     refs.curveBoard.appendChild(svg);
@@ -259,6 +264,7 @@
       if (index <= furthestAvailableStep()) {
         button.addEventListener('click', function () {
           state.currentStep = Math.min(index, maxOpenStep());
+          state.revealedSegments = state.currentStep + 1;
           state.readyToSave = false;
           renderAll();
         });
@@ -278,7 +284,7 @@
     var className = 'curve-node';
     if (index === state.currentStep && !state.readyToSave) {
       className += ' is-current';
-    } else if (isStepComplete(index)) {
+    } else if (index < state.currentStep && isStepComplete(index)) {
       className += ' is-complete';
     } else {
       className += ' is-hint';
@@ -826,6 +832,7 @@
 
   function goBack() {
     state.currentStep = Math.max(0, state.currentStep - 1);
+    state.revealedSegments = state.currentStep + 1;
     state.readyToSave = false;
     renderAll();
   }

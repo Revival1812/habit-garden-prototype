@@ -17,9 +17,9 @@
 .create-page::before {
   inset: 68px 0 0;
   background:
-    radial-gradient(ellipse at 18% 18%, rgba(143, 183, 182, 0.22), transparent 34%),
-    radial-gradient(ellipse at 76% 12%, rgba(168, 199, 149, 0.18), transparent 30%),
-    linear-gradient(135deg, rgba(244, 240, 231, 0.94), rgba(232, 242, 237, 0.76) 46%, rgba(255, 253, 247, 0.96));
+    radial-gradient(ellipse at 18% 18%, rgba(143, 183, 182, 0.14), transparent 34%),
+    radial-gradient(ellipse at 76% 12%, rgba(168, 199, 149, 0.10), transparent 30%),
+    linear-gradient(135deg, rgba(250, 247, 237, 0.72), rgba(245, 242, 235, 0.64) 46%, rgba(250, 247, 237, 0.76));
 }
 
 .create-page::after {
@@ -164,7 +164,7 @@
   stroke-dasharray: 600;
   stroke-dashoffset: 600;
   opacity: 0.96;
-  animation: curveFlowReveal 1.18s cubic-bezier(0.22, 0.72, 0.2, 1) forwards;
+  transition: stroke-dashoffset 0.68s cubic-bezier(0.22, 0.72, 0.2, 1);
 }
 
 .curve-node {
@@ -258,17 +258,6 @@
     0 10px 24px rgba(63, 95, 70, 0.1);
   opacity: 0;
   animation: curveStartIn 0.42s ease 0.08s forwards;
-}
-
-@keyframes curveFlowReveal {
-  from {
-    stroke-dashoffset: 600;
-    opacity: 0.4;
-  }
-  to {
-    stroke-dashoffset: var(--curve-offset, 500);
-    opacity: 0.96;
-  }
 }
 
 @keyframes curveNodeIn {
